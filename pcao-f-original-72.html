@@ -1,0 +1,2857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Fluency & Responsible Use — Advanced Mock Exam</title>
+<style>
+  :root{
+    --teal-900:#0b4f4a;
+    --teal-700:#0f766e;
+    --teal-600:#14b8a6;
+    --teal-100:#e6fbf7;
+    --green-500:#22c55e;
+    --green-100:#eafcef;
+    --red-500:#dc2626;
+    --red-100:#fdecec;
+    --amber-500:#d97706;
+    --ink:#0f2a28;
+    --muted:#5b7370;
+    --line:#d3ece7;
+    --bg:#ffffff;
+    --card:#ffffff;
+    --radius:14px;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:linear-gradient(180deg,var(--teal-100) 0%, #ffffff 340px);
+    color:var(--ink);
+    font-family:"Segoe UI",Inter,system-ui,-apple-system,Arial,sans-serif;
+    min-height:100vh;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:20px 18px 60px;}
+
+  header.top{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:14px 20px;background:var(--teal-900);color:#fff;border-radius:var(--radius);
+    box-shadow:0 6px 20px rgba(11,79,74,.18);
+  }
+  header.top h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.2px;}
+  header.top .sub{font-size:12px;color:#bfe9e2;margin-top:2px;}
+  .timer{
+    font-variant-numeric:tabular-nums;
+    background:rgba(255,255,255,.12);
+    padding:8px 14px;border-radius:999px;font-weight:700;font-size:15px;
+    border:1px solid rgba(255,255,255,.25);
+    min-width:92px;text-align:center;
+  }
+  .timer.low{background:rgba(220,38,38,.85);border-color:rgba(255,255,255,.4);}
+
+  .progress-shell{margin:16px 0 6px;background:#dff5f1;border-radius:999px;height:8px;overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal-600),var(--green-500));width:0%;transition:width .3s ease;}
+  .progress-label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:24px 24px 20px;box-shadow:0 10px 28px rgba(15,118,110,.06);
+  }
+  .badge-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;}
+  .badge{
+    font-size:11.5px;font-weight:700;letter-spacing:.3px;
+    background:var(--teal-100);color:var(--teal-700);border:1px solid #bfe9e2;
+    padding:4px 10px;border-radius:999px;
+  }
+  .badge.instr{background:var(--green-100);color:#166534;border-color:#bbf0c9;}
+
+  .scenario{font-size:16.5px;line-height:1.55;margin:0 0 18px;}
+
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .option{
+    display:flex;gap:12px;align-items:flex-start;
+    border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;
+    cursor:pointer;transition:border-color .15s, background .15s;
+  }
+  .option:hover{border-color:var(--teal-600);}
+  .option input{margin-top:3px;accent-color:var(--teal-700);width:16px;height:16px;flex:none;}
+  .option .opt-text{font-size:14.8px;line-height:1.45;}
+  .option .opt-why{font-size:13px;line-height:1.4;margin-top:6px;color:var(--muted);display:none;}
+
+  .option.locked{cursor:default;}
+  .option.reveal-correct{border-color:var(--green-500);background:var(--green-100);}
+  .option.reveal-wrong{border-color:var(--red-500);background:var(--red-100);}
+  .option.reveal-correct .opt-why, .option.reveal-wrong .opt-why{display:block;}
+  .opt-tag{font-size:11px;font-weight:800;padding:1px 7px;border-radius:6px;margin-left:auto;flex:none;}
+  .opt-tag.ok{background:var(--green-500);color:#fff;}
+  .opt-tag.bad{background:var(--red-500);color:#fff;}
+
+  .feedback-banner{
+    margin-top:16px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14.5px;
+    display:none;align-items:center;gap:8px;
+  }
+  .feedback-banner.correct{display:block;background:var(--green-100);color:#166534;border:1px solid #bbf0c9;}
+  .feedback-banner.wrong{display:block;background:var(--red-100);color:#991b1b;border:1px solid #f3c6c6;}
+
+  .controls{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap;}
+  .hint{font-size:12.5px;color:var(--muted);}
+  button{
+    font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;
+    border:none;border-radius:10px;padding:11px 20px;transition:transform .1s, opacity .15s;
+  }
+  button:active{transform:scale(.97);}
+  button:disabled{opacity:.45;cursor:not-allowed;}
+  .btn-primary{background:var(--teal-700);color:#fff;}
+  .btn-primary:hover:not(:disabled){background:var(--teal-900);}
+  .btn-ghost{background:transparent;color:var(--teal-700);border:1.5px solid var(--teal-600);}
+
+  #resultsScreen{display:none;}
+  .score-hero{
+    text-align:center;padding:34px 20px;border-radius:var(--radius);
+    background:linear-gradient(135deg,var(--teal-700),var(--teal-900));color:#fff;
+    box-shadow:0 12px 30px rgba(11,79,74,.25);
+  }
+  .score-hero .big{font-size:46px;font-weight:800;letter-spacing:-1px;}
+  .score-hero .lbl{font-size:13px;color:#bfe9e2;margin-top:4px;letter-spacing:.3px;}
+  .pass-pill{display:inline-block;margin-top:14px;padding:7px 18px;border-radius:999px;font-weight:800;font-size:13px;}
+  .pass-pill.pass{background:var(--green-500);color:#fff;}
+  .pass-pill.fail{background:var(--red-500);color:#fff;}
+
+  table.domain-table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px;}
+  table.domain-table th, table.domain-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);}
+  table.domain-table th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;}
+  .bar-cell{width:40%;}
+  .mini-bar-shell{background:#e6fbf7;border-radius:999px;height:8px;overflow:hidden;}
+  .mini-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal-600),var(--green-500));}
+
+  footer.note{text-align:center;color:var(--muted);font-size:12px;margin-top:26px;}
+  @media (max-width:520px){
+    header.top{flex-direction:column;align-items:flex-start;gap:10px;}
+    .score-hero .big{font-size:36px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <h1 id="examTitle">Advanced Mock Exam</h1>
+      <div class="sub" id="examSub">75 questions · scenario-based · immediate feedback</div>
+    </div>
+    <div class="timer" id="timer">150:00</div>
+  </header>
+
+  <div class="progress-shell"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label"><span id="progressText">Question 1 of 75</span><span id="scoreRunning">Score: 0 / 0</span></div>
+
+  <div class="card" id="quizScreen">
+    <div class="badge-row">
+      <span class="badge" id="domainBadge">D6</span>
+      <span class="badge instr" id="instrBadge">Select one answer</span>
+    </div>
+    <p class="scenario" id="scenarioText"></p>
+    <div class="options" id="optionsList"></div>
+    <div class="feedback-banner" id="feedbackBanner"></div>
+    <div class="controls">
+      <span class="hint" id="hintText">Choose an answer, then check it.</span>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-primary" id="checkBtn">Check Answer</button>
+        <button class="btn-primary" id="nextBtn" disabled>Next Question →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="resultsScreen">
+    <div class="score-hero">
+      <div class="big" id="scoreBig">0 / 1000</div>
+      <div class="lbl">FINAL SCORE</div>
+      <div class="pass-pill" id="passPill">—</div>
+    </div>
+    <table class="domain-table">
+      <thead><tr><th>Domain</th><th>Correct</th><th class="bar-cell">Accuracy</th></tr></thead>
+      <tbody id="domainTableBody"></tbody>
+    </table>
+    <div class="controls">
+      <span class="hint">Review your mistakes by scrolling up, or start over.</span>
+      <button class="btn-ghost" id="restartBtn">Restart Exam</button>
+    </div>
+  </div>
+
+  <footer class="note">Built for exam practice. Not affiliated with Panaversity. Immediate per-question feedback — no answers are shown until you check.</footer>
+</div>
+
+<script>
+const EXAM_TITLE = "Sir Zia PCAO-F Practice Exam — Original 72-Question Bank";
+const PASS_SCORE = 1000;
+const PASS_THRESHOLD = 720;
+const TIME_LIMIT_MIN = 144; // ~2 min per question
+const QUESTIONS = [
+ {
+  "id": 1,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "An immigration consultancy proposes that an assistant issue the final decision on whether an applicant's supporting documents satisfy a visa category, arguing that the newest flagship model has an error rate low enough to trust unattended.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Appropriate, since a low error rate on a well-defined checklist task is exactly what a capable model is for",
+    "why": "False accuracy substitute"
+   },
+   {
+    "id": "B",
+    "text": "Appropriate with a person spot-checking a sample of decisions each week",
+    "why": "Undefined gate"
+   },
+   {
+    "id": "C",
+    "text": "Inappropriate as the decision-maker, because accountability for a final determination against a named person cannot transfer to a tool, whatever the error rate",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Inappropriate for any involvement at all, including drafting a summary of the documents for the officer who decides",
+    "why": "Abandonment"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "A visa determination is a final decision against a named individual, so the task stays human-owned regardless of model accuracy: the barrier is who answers for the outcome, not the error rate. A better model changes nothing about that. A treats accuracy as the whole question. B is a spot-check dressed as a gate; a sampled review lets the tool decide most cases. D confuses the subject being off-limits as a decision with the subject being off-limits for support work like summarising documents."
+ },
+ {
+  "id": 2,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "A hospital pilots an assistant that ranks incoming emergency patients by likely urgency from triage notes, to help nurses sequence care during a surge.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Appropriate as the ranking authority, since urgency scoring is a pattern-matching task the model is good at",
+    "why": "Consequence ignored"
+   },
+   {
+    "id": "B",
+    "text": "Appropriate to support triage nurses with a suggested order and reasoning, with the nurse making the sequencing call",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Inappropriate for any role in a medical setting, since the subject is healthcare",
+    "why": "Abandonment"
+   },
+   {
+    "id": "D",
+    "text": "Appropriate as the ranking authority only during a declared surge, when speed outweighs accuracy",
+    "why": "Stakes inverted"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "A medical sequencing decision carries a consequence too serious and too hard to undo to hand to a tool as the decider, so it stays human-owned; the assistant can still support the work by surfacing a suggested order and its reasoning for the nurse to weigh. A ignores that pattern-matching skill does not settle who is accountable. C wrongly rules out support work along with the verdict. D gets the stakes backwards: a surge is exactly when a wrong sequencing call is most costly, not less."
+ },
+ {
+  "id": 3,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "An HR analyst replaces every employee ID in a survey export with a random code before uploading it for a sentiment analysis. The original ID-to-code mapping still exists in a separate access-controlled spreadsheet kept by payroll.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The uploaded data is anonymised, since no employee ID appears anywhere in the file that was uploaded",
+    "why": "Pseudonymised as anonymised"
+   },
+   {
+    "id": "B",
+    "text": "The uploaded data remains pseudonymised, because a mapping back to identifiable employees still exists somewhere, so re-identification is possible",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "The classification depends on which department reviews the sentiment results, not on the mapping",
+    "why": "Irrelevant factor"
+   },
+   {
+    "id": "D",
+    "text": "The data became anonymised the moment it left the payroll team's own systems",
+    "why": "Custody confused with de-identification"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Anonymisation requires that re-identification be impossible, not merely that it be inconvenient. As long as a mapping exists anywhere that can reverse the coding back to a person, the data is pseudonymised and keeps whatever tier that implies, whatever file it currently sits in. A mistakes the absence of IDs in one file for the absence of a mapping altogether. C and D introduce factors the classification does not depend on."
+ },
+ {
+  "id": 4,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "Call transcripts were recorded with customer consent for quality assurance and already sit in an approved workspace. A product manager now asks an analyst to mine the same transcripts to identify customers likely to accept a paid upgrade, for a sales campaign.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Proceed directly, since the transcripts are already inside an approved workspace and no new upload is needed",
+    "why": "Route approval mistaken for purpose approval"
+   },
+   {
+    "id": "B",
+    "text": "Strip any names that appear in the transcripts before running the upsell analysis",
+    "why": "Wrong objection answered"
+   },
+   {
+    "id": "C",
+    "text": "Take it to whoever owns that data, since it was collected for one purpose and this is a different one, requiring fresh permission",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Run it in a private or temporary chat mode so the new analysis leaves no trace",
+    "why": "Privacy feature misapplied"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "Data carries the reason it was collected. Quality assurance and sales targeting are different purposes, so reusing the same transcripts for the second purpose needs its own permission from whoever owns that decision, regardless of where the data already sits. A treats workspace access as if it settled the purpose question. B answers an objection about names when the actual issue is the broken promise about why the data was gathered. D reaches for a privacy setting to solve a permissions problem, and hides the work besides."
+ },
+ {
+  "id": 5,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "Auditors discover warehouse staff photographing damage reports on personal phones and uploading them to a free consumer chatbot, because the company's approved tool cannot process images. The reports include customer site addresses. No one involved intended any harm.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Report the gap to whoever owns the policy and fix the approved tool, while keeping the consumer app closed to this data in the meantime",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "Block the consumer app on company devices and remind staff that unapproved tools are against policy",
+    "why": "Removes tool, not the reason it was used"
+   },
+   {
+    "id": "C",
+    "text": "Permit the consumer app for this use case, since staff will keep using it regardless of the rule",
+    "why": "Lowers the bar to match behaviour"
+   },
+   {
+    "id": "D",
+    "text": "Begin disciplinary action against the staff involved to deter repeat use",
+    "why": "Treats a systemic gap as a personal fault"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "Unapproved tool use tends to grow wherever the approved path is harder than the workaround; a ten-step approved process invites a one-step shortcut under deadline pressure. That is not an excuse for the violation, so the risky route stays closed to this data, but the actual fix is closing the capability gap and telling the policy owner where the approved path failed, not just removing the shortcut or punishing the people who found it."
+ },
+ {
+  "id": 6,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "A recruitment tool narrows two hundred applications down to a shortlist of fifteen, which a hiring manager then reviews closely before making offers.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Add a note to each of the fifteen files stating that an AI tool performed the first pass",
+    "why": "Records involvement, checks nothing"
+   },
+   {
+    "id": "B",
+    "text": "Sample some of the one hundred eighty-five excluded applications to check whether a group was systematically filtered out",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Re-run the shortlist with a different random seed and keep only names that appear in both lists",
+    "why": "Consistency mistaken for fairness"
+   },
+   {
+    "id": "D",
+    "text": "Tell the excluded applicants that an assistant was involved in screening their application",
+    "why": "Disclosure, not review"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "The easiest bias to miss is the one built into who gets excluded, because a review that only looks at survivors never sees a systematic gap. The control that catches this is sampling exclusions as well as inclusions. A records that a tool was used without examining anything. C measures agreement between two runs of a method that could be consistently biased in the same direction both times. D is a disclosure step, useful but separate from whether the screen was fair."
+ },
+ {
+  "id": 7,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "A team lead tells the compliance officer, \"a person reviews every AI-drafted disciplinary letter before it goes out,\" and cites this as the safeguard for the process.",
+  "options": [
+   {
+    "id": "A",
+    "text": "This statement, on its own, is a sufficient safeguard, since named human review is the standard control for sensitive drafting",
+    "why": "Human-in-loop assumed sufficient"
+   },
+   {
+    "id": "B",
+    "text": "The statement is only a safeguard once it also names who reviews, what specifically they check, and at what point the review happens",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "The safeguard is unnecessary, since disciplinary letters are low-stakes documents",
+    "why": "Stakes misjudged"
+   },
+   {
+    "id": "D",
+    "text": "The safeguard should instead be a stronger model, which would need less reviewing",
+    "why": "Capability substituted for control"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "A human-in-the-loop claim with no named reviewer, no defined checkpoint, and no statement of what is actually being verified is a phrase that sounds responsible and often means nothing in practice; it lets the assistant decide by default while a person merely glances afterward. The fix is naming who, what, and when. A accepts the vague claim at face value. C misjudges a disciplinary action as low-stakes. D swaps a governance question for a capability one."
+ },
+ {
+  "id": 8,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "After four months of a vendor's monthly analysis passing every review without correction, the vendor proposes the report now be published under \"AI-generated\" with no named person responsible for it.",
+  "options": [
+   {
+    "id": "A",
+    "text": "A clean track record earns the assistant continued use on similar work, but a named person still stands behind each result that goes out",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "After a long enough clean streak, responsibility reasonably shifts to the vendor whose tool produced the work",
+    "why": "Accountability transferred to a tool"
+   },
+   {
+    "id": "C",
+    "text": "Labelling the output \"AI-generated\" satisfies the need for accountability, since readers are told how it was produced",
+    "why": "Disclosure mistaken for accountability"
+   },
+   {
+    "id": "D",
+    "text": "A named owner only becomes necessary if a client later disputes something in the report",
+    "why": "Ownership made retroactive"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "A pass, however long the streak, earns the assistant similar work again; it never transfers the name on the result. B moves answerability to a vendor that is not the party sending the work to the client. C confuses telling the reader what produced the document with someone actually standing behind it. D treats ownership as something assigned after a complaint rather than something attached the moment work goes out under an organisation's name."
+ },
+ {
+  "id": 9,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "A support-ticket routing tool appears to place tickets from large corporate accounts ahead of older unresolved tickets from individual customers. The analyst who noticed this does not own the support policy and is unsure whether the pattern is actually a problem.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Leave the queue as is, since corporate accounts plausibly carry more business risk if delayed",
+    "why": "Guessing instead of deciding"
+   },
+   {
+    "id": "B",
+    "text": "Work through who is affected, what could go wrong for them, and what should be disclosed, then bring that reasoning to whoever owns the policy",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Re-run the routing with the account-type field removed and adopt whichever result looks fairer on inspection",
+    "why": "Unowned fix"
+   },
+   {
+    "id": "D",
+    "text": "Ask the assistant whether its own prioritisation is biased and keep the current setup if it says no",
+    "why": "Model asked to certify itself"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "An unclear case gets worked through four questions covering who is affected, what could go wrong, what fairness would look like, and what should be disclosed; if those cannot be settled by the person who found the pattern, the reasoning goes to whoever owns the decision rather than being resolved unilaterally. A guesses. C makes a policy judgment the analyst does not own. D treats the model's self-report as evidence, which it is not."
+ },
+ {
+  "id": 10,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "To keep supplier price negotiations \"off the record\" ahead of an audit, a procurement lead proposes running every related conversation in the private or temporary chat mode offered by the assistant.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The proposal works exactly as intended: neither vendor retains anything at all from a private-mode conversation",
+    "why": "Zero-retention misreading"
+   },
+   {
+    "id": "B",
+    "text": "Private mode keeps the chat out of normal history and memory, but the vendor still retains a copy for a period, and organisational records may capture it too",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Private mode only affects the assistant's memory feature; every conversation is still stored in visible history regardless of the mode",
+    "why": "Overcorrects the other way"
+   },
+   {
+    "id": "D",
+    "text": "Private mode is reliable for this purpose only if the account is on an individual plan rather than an organisation plan",
+    "why": "Invented distinction"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Private or temporary modes keep a conversation out of normal history and out of memory, but vendors still retain a copy for a limited period for safety review, and on an organisation's plan administrative visibility and exports may capture it as well. The modes are memory-free, not trace-free, so using them to keep sensitive negotiations off any record misreads what they do. A overstates what the mode achieves; C understates it; D invents a plan-based rule the mechanism does not have."
+ },
+ {
+  "id": 11,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "An analyst must apply corrections to 140 named payroll records classified as restricted data. A colleague suggests uploading the file to the company's enterprise-tier workspace, arguing that the enterprise plan is approved for internal work.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Proceed, since an enterprise plan is the appropriate approval level for internal, restricted work",
+    "why": "Plan tier mistaken for permission"
+   },
+   {
+    "id": "B",
+    "text": "Redact the employee names first, then apply as many corrections as the remaining fields allow",
+    "why": "Redaction breaks the task"
+   },
+   {
+    "id": "C",
+    "text": "Confirm with the data's policy owner which route is approved for this data and this purpose before proceeding",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Build a private connector directly to the payroll system so the data never becomes a standalone file",
+    "why": "Technical workaround, same unapproved route"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "An enterprise plan or a security page is not itself permission; for restricted data the approval comes from whoever owns that policy, confirming this specific route for this specific purpose. Since the employee identifiers are the substance of the task, redacting them would make the corrections impossible to apply, so A and B both fail in different ways, and D is a more sophisticated route that still bypasses the approval step rather than obtaining it."
+ },
+ {
+  "id": 12,
+  "domain": "D6",
+  "type": "single",
+  "k": 1,
+  "scenario": "A wealth-management associate asks an assistant to redact client names from a portfolio dataset before analysing spending patterns, but the account numbers, which are needed to link related transactions together, are left in place.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The dataset is now safe to use for any purpose, since removing names satisfies any reasonable privacy requirement",
+    "why": "Assumes redaction is complete once names are gone"
+   },
+   {
+    "id": "B",
+    "text": "Whether this redaction is sufficient depends on whether the analysis actually needs the account numbers or only needs the spending pattern itself",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "The redaction is unnecessary altogether, since account numbers alone cannot identify a person",
+    "why": "Ignores that account numbers can still enable re-identification"
+   },
+   {
+    "id": "D",
+    "text": "The dataset should be abandoned, since any regulated financial data cannot be safely analysed at all",
+    "why": "Real cost paid for no added protection"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "The useful question before redacting anything is whether the task needs the identifiers at all or only the underlying pattern; if only the pattern matters, the account numbers should be removed along with the names, and if linking related transactions is actually required, a different control such as restricting the analysis route is needed instead of assuming names alone were ever the whole story. Declaring the data automatically safe, dismissing account numbers as harmless, or abandoning the analysis outright all skip that actual judgment."
+ },
+ {
+  "id": 13,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "A finance associate uploads a 400-row expense export and asks for category totals, which will determine which department absorbs a budget cut. Every individual line item quoted in the reply matches the export exactly.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Accept the totals, since every line item checked is correct and the totals are simply their sum",
+    "why": "Assumes correct items imply correct sum"
+   },
+   {
+    "id": "B",
+    "text": "Spot-check ten more line items, and accept the totals if all ten also match",
+    "why": "Checks items, not the sum"
+   },
+   {
+    "id": "C",
+    "text": "Ask for the totals to be produced by code that is run and shown, then check which rows and categories the code used",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Ask the assistant to double-check its own arithmetic and confirm the totals are correct",
+    "why": "No calculator, just re-predicting"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "A written total can be wrong even when every individual line item is right, because a model predicts a plausible-looking sum rather than computing one unless it actually runs code. The reliable check is getting the number from code that was run and shown, then verifying the inputs that code used rather than re-checking the arithmetic by eye. Spot-checking items, however many, says nothing about whether they were correctly added."
+ },
+ {
+  "id": 14,
+  "domain": "D2",
+  "type": "multi",
+  "k": 3,
+  "scenario": "An analyst is reviewing a market summary before repeating its claims to a client. Which THREE features are genuine warning signs that a claim may be fabricated? (Select THREE.)",
+  "options": [
+   {
+    "id": "A",
+    "text": "A statistic stated to two decimal places with nothing to indicate where it came from",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "A sentence hedged with \"this can vary by region\"",
+    "why": "Hedging is the opposite signal"
+   },
+   {
+    "id": "C",
+    "text": "A claim that the assistant \"checked the supplier's page,\" with no page or excerpt shown",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "A summary noticeably longer than the analyst expected",
+    "why": "Length is not a truth signal"
+   },
+   {
+    "id": "E",
+    "text": "A figure on the first page that contradicts the same figure restated later",
+    "why": null
+   },
+   {
+    "id": "F",
+    "text": "A structure that mirrors the analyst's usual report template",
+    "why": "Formatting carries no information about truth"
+   }
+  ],
+  "correct": [
+   "A",
+   "C",
+   "E"
+  ],
+  "rationale": "A fabricated answer tends to show one of a few recognisable signs: specifics stated with unusual precision and no attached source, a claimed action described but never actually shown to have happened, and contradiction within the same document. Hedged language is what a careful answer looks like, not a red flag. Length and template structure are cosmetic and say nothing about whether the underlying claims are real."
+ },
+ {
+  "id": 15,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "An HR associate asks why a nine-day workweek policy would reduce turnover more than a flexible-hours policy, and gets a well-argued case in favour. A colleague asks the reverse question in a separate chat and gets an equally well-argued case for the opposite conclusion. The associate concludes the assistant \"doesn't actually know anything.\"",
+  "options": [
+   {
+    "id": "A",
+    "text": "Both answers are hallucinated, since they cannot both be built on real evidence",
+    "why": "Misdiagnoses hallucination"
+   },
+   {
+    "id": "B",
+    "text": "The second chat was contaminated by leftover context from the first conversation",
+    "why": "The chats were separate"
+   },
+   {
+    "id": "C",
+    "text": "Each question's wording signalled the conclusion it wanted, and a trained lean toward agreeable answers supplied it",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "This is simply random variation between two runs of an identical question",
+    "why": "The two questions were not identical"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "A question phrased as \"why is X better than Y\" hands the assistant a conclusion before any analysis starts, and its trained lean toward confident, agreeable text supplies a case for whichever side was asked about. The fix is neutral framing that asks it to weigh both sides, not a verdict about whether the assistant knows anything. The two chats were unrelated sessions, and the two questions were meaningfully different, so contamination and pure randomness both miss the actual cause."
+ },
+ {
+  "id": 16,
+  "domain": "D2",
+  "type": "multi",
+  "k": 2,
+  "scenario": "In one morning an associate produces five items with an assistant's help. For which TWO does a normal read-through fall short, either because a second reviewer is needed or because the action must be verified before it happens? (Select TWO.)",
+  "options": [
+   {
+    "id": "A",
+    "text": "A personal agenda for the associate's own one-to-one meeting",
+    "why": "Reaches nobody, a glance is enough"
+   },
+   {
+    "id": "B",
+    "text": "A routine reply to one customer, sent personally by the associate",
+    "why": "Reaches one person, reversible with a follow-up"
+   },
+   {
+    "id": "C",
+    "text": "A statement to be published on the company's public website",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Cancelling forty duplicate orders directly in the operations system",
+    "why": null
+   },
+   {
+    "id": "E",
+    "text": "Five subject-line ideas for an internal newsletter",
+    "why": "Reaches nobody yet, low stakes"
+   }
+  ],
+  "correct": [
+   "C",
+   "D"
+  ],
+  "rationale": "Checking scales with how far a result reaches and how hard it is to undo. A public statement reaches the widest audience and earns a second reviewer; a bulk irreversible action needs its check before it happens, since there is no reviewer afterward to catch a mistake once done. The other three items reach few or no people and are reversible, so a second layer of review would be excessive for them."
+ },
+ {
+  "id": 17,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "A pricing project returns a quote listing unit prices to the cent that nobody on the team currently recognises. The associate assumes the assistant invented the numbers and plans to re-send the request with \"use only current prices.\"",
+  "options": [
+   {
+    "id": "A",
+    "text": "Re-send with stricter wording about using current prices, and regenerate the quote",
+    "why": "Tells the model to ignore what it was configured to use"
+   },
+   {
+    "id": "B",
+    "text": "Check the project's stored files for an outdated rate card and replace it, then set a schedule to review stored files",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Switch to a more capable model, on the theory that it fabricates numbers less often over long documents",
+    "why": "Changes the model, not the stale file"
+   },
+   {
+    "id": "D",
+    "text": "Ask the assistant to state a confidence percentage for each price and keep only the highest-rated ones",
+    "why": "Self-rated confidence is not a signal"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Stored context that has gone out of date fails quietly, producing a confident, precise-looking answer with no error message, because the assistant has no way to know the file it was given is stale. What looks like fabrication is often a configuration problem, so the fix is finding and replacing the outdated source and reviewing stored files on a schedule, not tightening the wording or swapping models, and not asking for a confidence score the model has no real basis for."
+ },
+ {
+  "id": 18,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "A claims team has an assistant pre-screen nine hundred warranty claims and fast-track one hundred twenty for approval. The team lead reviews all one hundred twenty carefully and finds them sound.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Note in each of the fast-tracked files that an AI tool performed the initial screening",
+    "why": "Records involvement, verifies nothing"
+   },
+   {
+    "id": "B",
+    "text": "Inform the claimants whose claims were not fast-tracked that a tool was involved in screening",
+    "why": "Disclosure question, not a fairness check"
+   },
+   {
+    "id": "C",
+    "text": "Sample some of the claims that were not fast-tracked, to check whether a group was routed away as a pattern",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Re-run the screening with stricter settings and approve only claims that appear on both fast-track lists",
+    "why": "Tests agreement, not fairness"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "When a system narrows a large set down and a human only inspects what remains, a systematic exclusion of one group can pass unnoticed indefinitely, because the review never looks at what was filtered out. The corrective control is to sample the excluded group as well as the included one. Recording that a tool was used, disclosing to excluded claimants, or comparing two runs of the same method all leave the actual fairness question unexamined."
+ },
+ {
+  "id": 19,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "A customer-insights associate pastes forty interview transcripts into one message and asks for them to be coded by theme, counted, ranked, and written into a memo in a single pass. Later, one theme turns out to have been mis-coded in eight transcripts, and the error survived into the final memo.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Keep the single combined request but add an instruction to \"work carefully and re-check each code\"",
+    "why": "Gives an instruction the model has no way to act on"
+   },
+   {
+    "id": "B",
+    "text": "Send one request per stage, verifying the theme-coding table against the transcripts before counting proceeds",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Re-run the identical single-pass request on a stronger model and compare the two memos",
+    "why": "Changes the model, not the structure"
+   },
+   {
+    "id": "D",
+    "text": "Split the transcripts into four smaller batches, running the same single-pass request on each",
+    "why": "Keeps every stage inside each pass"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "A multi-stage task should be split by order, with a check placed right after the stage where a mistake would spread the farthest; here that is the coding step, since a wrong code then gets counted, ranked, and written up looking perfectly consistent. Adding a general instruction to be careful gives the model nothing concrete to verify against. Changing the model or shrinking the batch size leaves the same single-pass structure that let the error propagate."
+ },
+ {
+  "id": 20,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "A junior analyst, new to the field and with no background in the subject, drafts a technical compliance briefing that fully addresses the request and is consistent with the source document provided.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Ask a colleague with relevant domain experience whether the briefing would be considered credible by that field's standards",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "Ask a colleague to proofread the briefing for tone and clarity before it circulates",
+    "why": "Wrong reference checked"
+   },
+   {
+    "id": "C",
+    "text": "Ask the assistant to rate its own briefing's accuracy and revise anything scoring below a set threshold",
+    "why": "Self-rating substituted for expert judgment"
+   },
+   {
+    "id": "D",
+    "text": "Run a formatting pass so the briefing reads as polished as one an expert would produce",
+    "why": "Polish is not evidence of correctness"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "An output can be judged against what was asked for, the source material, and the standards of the relevant field, and it can pass the first two while still failing the third. Since the analyst lacks the domain background to judge credibility by field standards, that gap needs someone with the relevant expertise, not a proofread for tone, a self-assigned confidence score, or a purely cosmetic polish."
+ },
+ {
+  "id": 21,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "An assistant drafts one internal document explaining why a product launch missed its target. The finding now needs to reach both a governing board and the frontline team whose daily process is changing as a result.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Produce one rewrite for each audience, shaped around what that reader needs to decide or do, then edit each in focused passes",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "Ask for the existing draft to sound \"more professional\" and send that single version to both audiences",
+    "why": "Polishes surface, changes nothing about the reader"
+   },
+   {
+    "id": "C",
+    "text": "Send the identical document to both audiences with a different cover note attached for each",
+    "why": "Leaves the mismatch in the document itself"
+   },
+   {
+    "id": "D",
+    "text": "Produce three versions aimed at the board, choose the strongest, and send that same version to the frontline team as well",
+    "why": "Reuses one audience's version for another"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "A document written for the wrong reader often needs a full rewrite rather than a touch-up, since a governing body wants the figure, the cause, and the decision, while the frontline team wants what changed for them and what to do next. Separate rewrites, each edited for its own audience, address that; polishing tone, changing only the cover note, or reusing one audience's draft for the other all leave the underlying mismatch in place."
+ },
+ {
+  "id": 22,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "A procurement manager's first draft of a request reads: \"Tell me this shortlist is defensible.\" A colleague points out this is likely to produce a one-sided answer.",
+  "options": [
+   {
+    "id": "A",
+    "text": "\"Rate this shortlist 1 to 10 on coverage, cost realism, and risk, with the one change that would most improve it.\"",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "\"Defend this shortlist against the objections that finance is likely to raise.\"",
+    "why": "Still hands over a conclusion to argue for"
+   },
+   {
+    "id": "C",
+    "text": "\"Isn't this shortlist good enough for the committee? Point out anything minor I should tidy up.\"",
+    "why": "Even more leading than the original"
+   },
+   {
+    "id": "D",
+    "text": "\"Rate your confidence, as a percentage, that this shortlist survives committee review unchanged.\"",
+    "why": "Self-reported confidence, no named criteria"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "Wording built on verbs like defend, confirm, or prove hands the assistant a conclusion before any real evaluation happens, and it tends to comply. Removing the embedded conclusion and forcing a commitment on named, scored criteria produces a more honest assessment. The other rewrites either keep a conclusion baked in, make it worse, or ask for an unanchored confidence number that carries no real signal."
+ },
+ {
+  "id": 23,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "Preparing a client note, an associate is given a figure for a compliance threshold, sourced from a consultancy blog post from three years ago. The associate opens the post and confirms it does state that figure.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Use the figure as given, since the citation was checked and the page does support the claim as written",
+    "why": "Stops at the citation existing"
+   },
+   {
+    "id": "B",
+    "text": "Find the regulator's own current page, confirm the figure and its date there, and cite that instead",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Ask for two additional sources and use the figure if they agree with the original blog post",
+    "why": "Stacks sources that could share the same stale origin"
+   },
+   {
+    "id": "D",
+    "text": "Drop the figure from the note entirely, since a three-year-old secondary source cannot be relied on",
+    "why": "Abandons a checkable fact instead of checking it"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Verifying a claim means opening the source, confirming what it says, and asking whether that source is good enough, and a primary source from the regulator itself beats a secondary blog post about the regulator, especially one that may now be outdated. Confirming that a citation exists and matches the claim as written is not the same as confirming the claim is still current."
+ },
+ {
+  "id": 24,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "An assistant produces a 700-word draft letter against a 200-word limit, addresses the reader only as \"the customer,\" and buries the one action they need to take. This is the first draft attempt.",
+  "options": [
+   {
+    "id": "A",
+    "text": "\"Score this out of ten overall and keep improving whichever part scores lowest.\"",
+    "why": "Grades with no named criteria on a weak first draft"
+   },
+   {
+    "id": "B",
+    "text": "\"This isn't right. Try a completely different approach to the whole letter.\"",
+    "why": "A reaction, not an instruction"
+   },
+   {
+    "id": "C",
+    "text": "\"The length broke the limit, the reader needs to be addressed directly, and the required action is buried; keep everything else and fix those three things.\"",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Rewrite the original request with far more detail and re-run it on a more capable model",
+    "why": "Discards a draft that was mostly workable"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "For a weak first result, naming exactly which parts of the request failed and asking for those specific fixes works better than an unscored complaint or a generic quality score, because it tells the assistant precisely what to change rather than leaving it to guess again. Starting over or switching models throws away whatever was already close to right."
+ },
+ {
+  "id": 25,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "A learning-and-development associate asks for five different launch formats for a new programme, but also fixes the slide template, two mandatory sections, a strict word limit per idea, and a required tone. All five results come back as minor variations of one format.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The output's shape was pinned far too tightly for an options round; keep the situation details, loosen the format constraints, and tighten them again once one direction is chosen",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "The assistant lacked sufficient context about the programme, its audience, and its goals",
+    "why": "Situation context was already supplied in full"
+   },
+   {
+    "id": "C",
+    "text": "Attach a competitor's launch materials so the assistant has a concrete example to work from",
+    "why": "Narrows the shape even further"
+   },
+   {
+    "id": "D",
+    "text": "The task needs deeper reasoning; re-run it with more extensive step-by-step thinking enabled",
+    "why": "Treats a grip problem as a reasoning problem"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "Generating real options needs the situation loaded fully but the output described loosely, since fixed templates, mandatory sections, word limits, and tone all pin the answer's shape down to variations of one thing. The fix is fewer format constraints during the options round, with the full specification returning once a direction is chosen. Adding more context or an example to copy narrows the shape further rather than opening it up, and more reasoning effort does not loosen a grip problem."
+ },
+ {
+  "id": 26,
+  "domain": "D2",
+  "type": "single",
+  "k": 1,
+  "scenario": "A procurement associate has iterated four times on a supplier scorecard table with increasingly precise wording about how weights should apply. Formatting, columns, and filters are now correct, but the weighted-score column is still subtly wrong every round.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The weighted scores are being generated as text rather than computed, so the calculation belongs in code that is run rather than in prose",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "The wording describing the weights is still ambiguous and needs one more precise attempt",
+    "why": "Already tried four times without success"
+   },
+   {
+    "id": "C",
+    "text": "The task needs a more capable model to hold the weighting logic correctly",
+    "why": "Skips past cheaper causes untested"
+   },
+   {
+    "id": "D",
+    "text": "Four rounds have overloaded the conversation, so earlier weighting instructions no longer hold",
+    "why": "Would show as general drift, not one repeatable column error"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "One column being subtly wrong in the same way every round, despite everything else improving, is the signature of a calculation being written as fluent text instead of actually computed; the fix is running the weighting as code rather than describing it more precisely, since no amount of better wording produces a calculator. A model upgrade or blaming conversation length would either skip a cheap fix or misdescribe a symptom that looks nothing like general drift."
+ },
+ {
+  "id": 27,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "A hotel associate delegates a request: shortlist three conference venues with on-site AV for a 120-person event in mid-March, in a table with links, under a stated budget. In the result, two venues tied on price; the assistant picked one and dropped the other without saying a choice was made, and quietly widened the date range to find a third option.",
+  "options": [
+   {
+    "id": "A",
+    "text": "An instruction to show a plan of steps before starting, so the associate could approve the approach in advance",
+    "why": "Governs the route, not choices made mid-run"
+   },
+   {
+    "id": "B",
+    "text": "A line adding more detail about the event's audience and purpose",
+    "why": "Adds detail the assistant did not lack"
+   },
+   {
+    "id": "C",
+    "text": "A line requiring a list, after the work is done, of every assumption made along the way",
+    "why": "A choice never registered as a decision won't appear on such a list"
+   },
+   {
+    "id": "D",
+    "text": "A line stating what the assistant may decide alone, and requiring it to say whenever it made such a choice",
+    "why": null
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "rationale": "Both failures were silent choices made mid-run, not gaps in the plan or in context. What governs silent choices is stating explicitly what may be decided alone and requiring disclosure whenever such a decision is made, since an undisclosed choice cannot be reviewed. Approving a plan beforehand does not catch choices that arise during execution, extra situation detail was not the missing piece, and an after-the-fact assumptions list only surfaces things the assistant recognised as assumptions in the first place."
+ },
+ {
+  "id": 28,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "A standing project instruction reads, \"Flag unusual expenses in the monthly report.\" Two colleagues running identical data through the same instruction get different flagged items each time.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Add \"be careful and consistent\" to the instruction so the same judgment applies every run",
+    "why": "An exhortation, not a criterion"
+   },
+   {
+    "id": "B",
+    "text": "Switch to a more capable model, so the same ambiguous rule is resolved the same way each run",
+    "why": "Asks capability to substitute for a missing rule"
+   },
+   {
+    "id": "C",
+    "text": "Rewrite the rule with a named dollar threshold and expense category, so any reader would flag the same items",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Add three examples of expenses flagged last quarter and let the model infer the threshold from them",
+    "why": "Threshold stays unnamed, open to interpretation"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "A useful test for any instruction line is whether two colleagues reading it would do the same thing; \"flag unusual expenses\" fails that test while a named threshold and category passes it. A failing instruction shows no error, just different output each run, which is exactly this symptom. Telling the model to be careful adds no criterion, a stronger model still has to guess at an unwritten rule, and examples without a named threshold still leave room for different readers to draw the line differently."
+ },
+ {
+  "id": 29,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "An associate attaches raw inspection notes and asks the assistant to \"write up the inspection.\" The result is a tidy, general narrative that is useless for its actual purpose: an insurer's adjuster needs only three open defects, each with a date and a photo reference.",
+  "options": [
+   {
+    "id": "A",
+    "text": "State the reader, the purpose, the length, which items to include, and what to leave out",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "Make the request substantially longer by describing the site and the inspection day in full",
+    "why": "Adds words, not the missing information"
+   },
+   {
+    "id": "C",
+    "text": "Re-run the same request with a stronger model and deeper reasoning enabled",
+    "why": "No model can infer an unstated reader or purpose"
+   },
+   {
+    "id": "D",
+    "text": "Attach a prior year's internal narrative so the assistant copies its structure",
+    "why": "Copies a document built for a different reader"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "A generic result from a bare request is a completeness problem rather than an intelligence problem; nothing told the assistant who reads the write-up, why, how long it may be, or what to leave out, so it produced an average narrative. Supplying those elements turns a vague request into a real briefing. Extra length without that information, a more capable model, or imitating a document written for someone else all fail to supply what was actually missing."
+ },
+ {
+  "id": 30,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "An operations associate must reconcile fourteen months of technician-shift data against sign-in sheets. Only one of the fourteen files has been opened, and a colleague has warned the exports are messy. The associate plans to write out every rule for every irregularity they can imagine before having any code written.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Write the complete rule set first, covering every irregularity imaginable, so the eventual run is clean",
+    "why": "Rules from imagination, not from the actual data"
+   },
+   {
+    "id": "B",
+    "text": "Request the reconciliation now, and fix whatever data problems appear after the first output",
+    "why": "Runs the expensive computation before discovery"
+   },
+   {
+    "id": "C",
+    "text": "Ask first for the files to be profiled and any ambiguity or irregularity reported, before any rule is written",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Ask for the code in a specific programming language, so it can be read before running on real data",
+    "why": "Hands a technical choice back to the wrong person"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "With thirteen of fourteen files still unseen, the cheapest first move is discovery: have the files inspected and any irregularities reported, and only then write rules informed by what was actually found rather than by imagination. Writing every rule up front from guesswork misses defects nobody thought to anticipate, running the reconciliation before discovery repairs the expensive way round, and naming a programming language asks the associate to review code rather than review results, which is not where the useful check belongs."
+ },
+ {
+  "id": 31,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "A strategy associate wants a proposal for redesigning a returns process and instinctively asks for the complete proposal immediately, with deep reasoning turned on.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Ask for the full proposal now with deep reasoning enabled, and iterate on that draft as structure emerges",
+    "why": "Drafts before any ground is mapped"
+   },
+   {
+    "id": "B",
+    "text": "First ask what is already known: existing approaches, what other firms have tried, prior internal attempts",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Ask for three complete proposals in different styles and pick the strongest as a base for further editing",
+    "why": "Multiplies drafts before any research"
+   },
+   {
+    "id": "D",
+    "text": "Ask the assistant to grade the associate's own outline before any writing begins",
+    "why": "Grades a structure that has no research underneath it yet"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Before any real analysis or decision, mapping what is already known changes what every later draft is measured against; skipping this step is why first attempts tend to feel thin, built on whatever the model surfaces first rather than on the actual landscape. Drafting immediately, multiplying unresearched drafts, or grading an outline before any groundwork exists all skip the same missing step."
+ },
+ {
+  "id": 32,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "An associate has forty duplicate purchase orders identified by an assistant and needs them cancelled in the operations system. The draft brief says only, \"cancel the duplicates.\"",
+  "options": [
+   {
+    "id": "A",
+    "text": "Add a line naming what counts as a duplicate, and stating that the assistant must list them for approval before any cancellation happens",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "Leave the brief as written, since \"duplicates\" is an unambiguous category the assistant can identify on its own",
+    "why": "Assumes no judgment call is involved"
+   },
+   {
+    "id": "C",
+    "text": "Ask the assistant afterward to summarise which orders it cancelled and why",
+    "why": "After-the-fact review of an irreversible action"
+   },
+   {
+    "id": "D",
+    "text": "Switch to a more capable model, since duplicate detection benefits from stronger reasoning",
+    "why": "Model capability does not address the missing checkpoint"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "Bulk cancellation is an irreversible action with a category, \"duplicate,\" that a person and a model might define differently, so the brief needs both a definition and a required approval checkpoint before anything is actually cancelled. Assuming the term is unambiguous risks a silent misclassification; reviewing afterward is too late for an action with no undo; and a stronger model addresses reasoning quality, not the missing approval step."
+ },
+ {
+  "id": 33,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "A marketing associate writes: \"Look only at Vendor A and Vendor B. Find the three highest-rated courses on each, put name, price, and length into a table, then tell me which is best.\"",
+  "options": [
+   {
+    "id": "A",
+    "text": "This is a strong request because it gives the assistant clear, unambiguous steps to follow",
+    "why": "Mistakes detailed steps for a strong brief"
+   },
+   {
+    "id": "B",
+    "text": "This request pins the source vendors in advance, so if the actual best options exist elsewhere, nothing in the result will reveal that",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "This request is weak only because it does not name a required output format",
+    "why": "The format is already specified"
+   },
+   {
+    "id": "D",
+    "text": "This request is equivalent to simply asking \"what are some good courses,\" since both eventually produce a table",
+    "why": "Ignores that one names constrained sources and one does not"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Naming the exact sources to check turns the request into a recipe rather than an outcome: the assistant will faithfully search only where it was told to, and if the genuinely best options live somewhere else, the tidy result gives no indication that anything was missed. Detailed steps are not automatically a strength if they pin the search too narrowly, and the two example requests are meaningfully different in exactly this respect."
+ },
+ {
+  "id": 34,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "A weak first draft of a customer letter is 700 words against a 200-word limit and buries its one required call to action. An associate's instinct is to say, \"Score this out of ten and keep improving whatever scores lowest.\"",
+  "options": [
+   {
+    "id": "A",
+    "text": "This is the strongest possible instruction, since scoring against ten forces the assistant to commit to a judgment",
+    "why": "Right move for a strong candidate, not a broken first draft"
+   },
+   {
+    "id": "B",
+    "text": "Naming the specific parts that failed, such as the length limit and the buried action, is stronger for a weak first result than an unscored grading request",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Scoring and naming specific failures are functionally identical requests",
+    "why": "They point the assistant at different things to fix"
+   },
+   {
+    "id": "D",
+    "text": "Neither approach matters, since the second draft depends only on which model produced the first one",
+    "why": "Ignores the instruction itself as a lever"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "For a badly broken first attempt, naming precisely which parts failed tells the assistant exactly what to change, while an unscored ten-point grade only communicates how far off the result is without pointing at what to fix. Scoring against named criteria is a stronger move once a draft is already close and just needs refining, not when it is still fundamentally broken."
+ },
+ {
+  "id": 35,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "A team wants an assistant to \"tell us if this shortlist is defensible\" before it goes to a steering committee.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The phrase \"tell us if this is defensible\" is neutral wording, since it does not explicitly ask the assistant to argue one side",
+    "why": "The verb still signals a desired conclusion"
+   },
+   {
+    "id": "B",
+    "text": "Rephrasing to ask for a score against named criteria, plus the single change that would most improve it, removes the embedded conclusion",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "The problem can only be fixed by switching to a less agreeable model",
+    "why": "A model swap does not change what the wording signals"
+   },
+   {
+    "id": "D",
+    "text": "Asking for a self-reported confidence percentage would resolve the same issue",
+    "why": "An ungrounded number carries the same lean"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Wording that asks whether something is defensible, provable, or confirmable signals the answer wanted before any real evaluation happens. Replacing it with scored, named criteria and a request for the one change that would help most removes that embedded conclusion and forces a genuine judgment. Changing models does not remove a bias baked into the prompt's own wording, and an unanchored confidence percentage is exactly as agreeable as the original phrasing."
+ },
+ {
+  "id": 36,
+  "domain": "D1",
+  "type": "single",
+  "k": 1,
+  "scenario": "A finance associate needs a five-year cost-savings estimate from consolidating two offices, based on lease terms, utility bills, and staffing data. The resulting memo reads fluently and states a specific total, but shows no formula or intermediate figures anywhere.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The most useful next request would have been for the total to be produced by a shown calculation, not narrative prose",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "The memo is trustworthy as written, since every individual sentence in it is internally consistent",
+    "why": "Internal consistency is not the same as correct arithmetic"
+   },
+   {
+    "id": "C",
+    "text": "A more conservative tone in the writing would have solved the underlying issue",
+    "why": "Tone has nothing to do with whether the number was computed"
+   },
+   {
+    "id": "D",
+    "text": "The issue only matters if the figure will be shown to an external auditor",
+    "why": "A wrong number is a problem regardless of audience"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "A written figure and a computed one can look identical on the page, so any number a real decision rests on should be produced by a shown, checkable calculation rather than accepted as confident prose. Sentences reading smoothly and consistently together says nothing about whether the underlying arithmetic was actually performed, a softer tone does not address the missing calculation, and the risk of an unverified number does not depend on who eventually sees it."
+ },
+ {
+  "id": 37,
+  "domain": "D3",
+  "type": "single",
+  "k": 1,
+  "scenario": "A legal-operations associate analyses a 180-page agreement for cross-referencing obligations using the everyday mid-tier model with deep reasoning already switched on. The same request, well-specified, had worked fine on a 20-page contract. On the long document, the answer is fluent but shallow and misses obligations spread across sections.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Move to the top-tier flagship model, built to hold a large, complex structure coherent all at once",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "Switch to the fastest, cheapest tier to reduce the chance of losing track over a long document",
+    "why": "Wrong direction on the ladder"
+   },
+   {
+    "id": "C",
+    "text": "Turn deep reasoning off, since the extra reasoning may be diluting attention to the text",
+    "why": "Removes the one lever already helping"
+   },
+   {
+    "id": "D",
+    "text": "Split the agreement into ten separate conversations, each covering one section",
+    "why": "Destroys the cross-references the task needs"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "The request itself was not the problem, since it was specific and had already worked on a shorter document, so the remaining lever is model tier: the top rung exists for exactly this case, a large, complex structure that needs to be held coherent all at once. The fast tier is meant for high-volume, low-depth work, turning off reasoning removes a setting that was already helping, and splitting the document into separate conversations breaks the very cross-references the task is meant to find."
+ },
+ {
+  "id": 38,
+  "domain": "D3",
+  "type": "single",
+  "k": 1,
+  "scenario": "A colleague describes \"thinking mode\" as if it were a separate, more expensive model a person subscribes to.",
+  "options": [
+   {
+    "id": "A",
+    "text": "This is correct; thinking mode is billed and licensed independently of any particular model tier",
+    "why": "Invents a billing structure that does not exist"
+   },
+   {
+    "id": "B",
+    "text": "This is incorrect; thinking is a switch turned on within a chosen model, not a model name in itself",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "This is correct only for the flagship-tier model, where thinking is a distinct offering",
+    "why": "Draws a distinction that does not hold"
+   },
+   {
+    "id": "D",
+    "text": "This is incorrect; thinking mode and model tier are the same underlying setting under two names",
+    "why": "Collapses two genuinely separate controls into one"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Thinking is a setting that can be switched on within whichever model tier is chosen; it is not itself a model, a subscription tier, or interchangeable with the choice of model. Treating it as a purchasable model in its own right, as a flagship-only offering, or as identical to model choice all misdescribe how the two controls relate."
+ },
+ {
+  "id": 39,
+  "domain": "D3",
+  "type": "multi",
+  "k": 3,
+  "scenario": "An associate has five requests in one afternoon. Which THREE correctly pair the request with the right feature? (Select THREE.)",
+  "options": [
+   {
+    "id": "A",
+    "text": "\"What did the regulator announce this morning?\" → a live web search",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "\"Pull last quarter's approved rate card from our shared drive\" → a live web search",
+    "why": "The web cannot see an internal document"
+   },
+   {
+    "id": "C",
+    "text": "\"Which lease in this thread is riskier to exit early, given the clauses already shown?\" → deep reasoning on the existing material",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "\"What is today's applicable tax rate for this declaration?\" → a multi-minute cited research report",
+    "why": "Spends minutes investigating a fact search answers in seconds"
+   },
+   {
+    "id": "E",
+    "text": "\"Produce a cited comparison of logistics providers in the region, with funding and key clients\" → a multi-minute cited research report",
+    "why": null
+   },
+   {
+    "id": "F",
+    "text": "\"Rewrite this three-line update in a friendlier tone\" → deep reasoning enabled",
+    "why": "Slower reasoning wasted on a trivial rewrite"
+   }
+  ],
+  "correct": [
+   "A",
+   "C",
+   "E"
+  ],
+  "rationale": "A single current fact belongs to a live search; reasoning over material already in front of the assistant belongs to a thinking mode; and a broad, multi-source, cited investigation belongs to a research mode. Pulling an internal document from a shared drive is not something the open web can see at all, running a multi-minute investigation for one quick fact is the single most common waste of that feature, and applying deep reasoning to a trivial three-line rewrite spends slower processing where none is needed."
+ },
+ {
+  "id": 40,
+  "domain": "D3",
+  "type": "single",
+  "k": 1,
+  "scenario": "A sales associate runs a multi-minute cited research feature every time a pricing question comes up, \"so it looks things up thoroughly.\" The answers keep missing the firm's own discount rules, which live in an internal policy document.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Keep using the research feature but add \"use our internal pricing policy\" to each request",
+    "why": "An investigation of the open web cannot consult a document it cannot see"
+   },
+   {
+    "id": "B",
+    "text": "Switch to the flagship model for pricing questions, since it has processed more pricing-related material",
+    "why": "The frozen model was never trained on this firm's private policy"
+   },
+   {
+    "id": "C",
+    "text": "Put the internal policy into a persistent project's stored files and ask pricing questions inside that project",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Paste the policy document into the chat before each new pricing question",
+    "why": "Works once, but repeats the same manual step every time"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "A research feature investigates the outside world through live searches and will keep answering from the web no matter how thoroughly it runs, so it cannot be redirected onto an internal document by wording alone. A standing internal source belongs in a persistent project's stored files, effectively a pre-loaded starting point for every chat inside it, rather than being pasted in manually each time or expected to already be inside a model's frozen training."
+ },
+ {
+  "id": 41,
+  "domain": "D3",
+  "type": "single",
+  "k": 1,
+  "scenario": "To \"save context,\" an associate pastes a one-page summary of a 70-page distribution agreement and asks for a risk analysis. The result misses two indemnity clauses that were never included in the summary.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Upload the full agreement, since analysis quality depends on what is actually placed in front of the model",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "Write a longer, more careful summary that specifically includes the indemnity section",
+    "why": "Keeps the associate as the filter that could drop something again"
+   },
+   {
+    "id": "C",
+    "text": "Switch to the flagship model, which reasons more deeply about whatever text is provided",
+    "why": "Reasons harder about a text still missing the clauses"
+   },
+   {
+    "id": "D",
+    "text": "Ask which sections would be needed, and paste only those sections in",
+    "why": "Asks for sections from a document it has not seen"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "Uploaded material is converted into tokens the model can actually see, so a full document genuinely sits in front of it in a way a summary does not; analysis quality on something like a risk review jumps accordingly. A more careful summary still risks dropping something, a stronger model cannot reason about clauses it was never given, and asking the model to name needed sections from a document it has not read cannot work."
+ },
+ {
+  "id": 42,
+  "domain": "D3",
+  "type": "single",
+  "k": 1,
+  "scenario": "An associate proposes running all supplier-pricing conversations in the assistant's private, temporary-chat mode \"so nothing is on record if audit asks.\"",
+  "options": [
+   {
+    "id": "A",
+    "text": "This works exactly as intended, since private mode discards the conversation immediately with nothing retained anywhere",
+    "why": "Zero-retention misreading"
+   },
+   {
+    "id": "B",
+    "text": "Private mode keeps the chat out of normal history and memory, but the vendor still retains a copy for a period, and organisational exports may also capture it",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Private mode is retained for one major provider's product but genuinely discarded for another's",
+    "why": "Invents an asymmetry that is not accurate"
+   },
+   {
+    "id": "D",
+    "text": "Private mode changes nothing meaningful; conversations are stored in visible history exactly as before",
+    "why": "Overstates the other direction"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Private or temporary chat modes remove a conversation from a person's visible history and from memory, but vendors still retain a copy for a limited period for safety review, and administrative visibility or export settings on an organisation's account may capture it separately. This makes the mode memory-free rather than trace-free, which is different from either claiming total erasure or claiming no change at all."
+ },
+ {
+  "id": 43,
+  "domain": "D3",
+  "type": "single",
+  "k": 1,
+  "scenario": "A team needs a quick reformat of hundreds of similar product descriptions into a single consistent style, at scale.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The fastest, cheapest model tier, since this is high-volume, low-depth work",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "The flagship top-tier model, to guarantee the highest possible quality on every description",
+    "why": "Overspends capability on a task that does not need it"
+   },
+   {
+    "id": "C",
+    "text": "The mid-tier everyday model with deep reasoning switched on for each item",
+    "why": "Adds cost and time a simple reformat does not need"
+   },
+   {
+    "id": "D",
+    "text": "Whichever model was most recently used in that conversation, to keep things consistent",
+    "why": "Recency is not a basis for choosing capability"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "The model ladder exists to match task shape to capability: a large volume of simple, repetitive reformatting is exactly what the fast, cheap tier is for, and paying for flagship capability or extra reasoning time on a task this straightforward wastes both without improving the result. Choosing a model based on what happened to run last ignores what the task actually needs."
+ },
+ {
+  "id": 44,
+  "domain": "D3",
+  "type": "single",
+  "k": 1,
+  "scenario": "A procurement associate has iterated on a supplier scorecard table for several rounds. Everything about the output is now correct except one calculated column, which is subtly wrong the same way every round despite increasingly precise wording.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Switch to a more capable model, assuming a smarter model will get the calculation right",
+    "why": "Skips a cheaper, more precise fix"
+   },
+   {
+    "id": "B",
+    "text": "Move the calculation into code that is actually run, rather than continuing to describe it in words",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Add one more round of clarifying wording about exactly how the calculation should work",
+    "why": "Already failed across several precise attempts"
+   },
+   {
+    "id": "D",
+    "text": "Assume the conversation has become too long and start over from a blank chat",
+    "why": "Would show as broad drift, not one specific repeated error"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "A single calculated field being wrong in the same way every round, while everything else keeps improving, points to a feature problem rather than a wording problem: the calculation is being generated as fluent text rather than actually computed. Running it as code addresses that directly. A stronger model or another round of careful wording addresses the wrong lever, and the pattern does not match the general degradation a truly overloaded conversation would show."
+ },
+ {
+  "id": 45,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "In a contract-review workflow, an assistant extracts clauses from incoming contracts, a person and the assistant jointly draft redlines with the person approving every change, and a lawyer signs and sends the final document.",
+  "options": [
+   {
+    "id": "A",
+    "text": "All three steps should be fully automated, since the same tool performed well on the extraction step",
+    "why": "Halo delegation across unrelated steps"
+   },
+   {
+    "id": "B",
+    "text": "This division is reasonable: extraction is reversible and low-stakes, redlining keeps a human judging each change, and signing stays with the accountable lawyer",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "The workflow is wrong because any legal document should stay entirely human-authored from the first draft",
+    "why": "Abandonment of a lower-risk, reversible step"
+   },
+   {
+    "id": "D",
+    "text": "The redlining step should also be automated, since the extraction step already proved reliable",
+    "why": "Extraction's success says nothing about the approval decision"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Ownership of a step should track reversibility, stakes, and who answers for the outcome, not how well an unrelated earlier step performed. Extraction is a reversible, low-stakes first pass appropriate for a tool; drafting with a human approving each change matches the middle stakes of redlining; and an irreversible, high-stakes act like signing correctly stays with the accountable person. Extending automation to redlining purely because extraction went well, or refusing any assistance at all, both misjudge what actually determines ownership."
+ },
+ {
+  "id": 46,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "A team lead says: \"Our contract-drafting assistant has been accurate for two months, so I'm comfortable letting it also approve low-value contract changes without review.\"",
+  "options": [
+   {
+    "id": "A",
+    "text": "This reasoning is sound, since a consistent track record on drafting is direct evidence the approval step is also safe to automate",
+    "why": "Confuses drafting quality with evidence about a decision"
+   },
+   {
+    "id": "B",
+    "text": "This is halo delegation: strong performance on drafting is being used to justify handing over a different step, approval, which needs its own separate risk assessment",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "This is an unstaffed gate, since the reviewer has stopped checking anything at all",
+    "why": "No reviewer was described as having stopped checking"
+   },
+   {
+    "id": "D",
+    "text": "This is appropriate only if a stronger model is used for the approval step specifically",
+    "why": "Model capability does not address the ownership question"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Drafting quality is evidence about the draft, not about whether a different step, approval, should also be automated; that step has its own reversibility, stakes, and accountability profile that a good drafting track record says nothing about. This differs from an unstaffed gate, where a reviewer exists on paper but has stopped genuinely checking; here the issue is extending trust across unrelated steps, not a decayed review."
+ },
+ {
+  "id": 47,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "A marketing associate attaches two years of event data and asks for next year's calendar with a budget allocation per event. The plan is detailed and confident, allocating last year's full budget across twelve events. In a meeting the week before, leadership had halved the events budget; that decision exists in no document, and the associate did not know about it.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The request was under-specified; clearer wording would have made the model flag uncertainty about the budget",
+    "why": "No wording can supply a fact nobody typed"
+   },
+   {
+    "id": "B",
+    "text": "A more capable model would have recognised the undocumented budget change on its own",
+    "why": "Expects a stronger model to know an undocumented decision"
+   },
+   {
+    "id": "C",
+    "text": "The step depended on information that was never available to the model at all, so it filled the gap with full confidence rather than flagging anything",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "The attached event data was too large, so the context window dropped the part revealing the budget cut",
+    "why": "The budget decision was never in any document to begin with"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "The relevant test before delegating a step is whether everything it needs could actually be placed in front of the model, not simply whether the model seems capable of the task. A verbal decision recorded nowhere could never have been supplied, so the model filled that gap with a plausible-looking figure at the same confidence as the parts it genuinely computed. Better wording or a stronger model cannot conjure a fact that exists in no document, and no context was dropped, since the fact was never in any document to drop."
+ },
+ {
+  "id": 48,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "An associate built a quote-generation tool by prompt inside a personal project. A sales director has since made \"run it through the project\" a required CRM step, and two branches now quote customers directly from its output. The associate still fixes issues by editing the prompt whenever a branch reports a wrong figure.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Keep improving it through prompt edits, since it already serves the branches' needs reasonably well",
+    "why": "Ignores that other people now depend on it"
+   },
+   {
+    "id": "B",
+    "text": "Escalate to engineering, since other teams now depend on it and it needs an owner, uptime, and access control",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Rebuild it independently with a direct API connection and add authentication personally",
+    "why": "Technically capable but outside the associate's role, still without a support path"
+   },
+   {
+    "id": "D",
+    "text": "Package it as a shared reusable skill so every branch can regenerate a consistent copy",
+    "why": "Solves consistency of method, not ownership or reliability"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "The point at which other people start depending on a prompt-built tool is the signal that it has become infrastructure, needing an owner, uptime, and access control that a personal prompt setup cannot provide; escalating at that point is the correct move, not a failure. Continuing to patch it by hand ignores the dependency, building a more technically sophisticated version personally still leaves it without institutional support, and packaging it as a reusable method addresses consistency without addressing reliability or ownership."
+ },
+ {
+  "id": 49,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "A reporting team plans to redesign its monthly inventory report by consolidating three prompts into one and moving format rules into standing instructions, and wants to report an improvement figure to management afterward.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Move the format rules into standing configuration first, so every later run benefits immediately",
+    "why": "A real improvement, but not the first move"
+   },
+   {
+    "id": "B",
+    "text": "Consolidate the three prompts first, since removing steps is the largest available saving",
+    "why": "A real improvement, but not the first move"
+   },
+   {
+    "id": "C",
+    "text": "Decide on \"time saved\" as the figure to report, so progress can be shown quickly",
+    "why": "Picks a metric before establishing what to compare it against"
+   },
+   {
+    "id": "D",
+    "text": "Run the current process once, unchanged, and record how long it took, how many revisions it needed, and how many manual steps were involved",
+    "why": null
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "rationale": "A baseline cannot be reconstructed afterward, because a memory of the old process will tend to flatter it, so recording the unchanged process first is necessary before any change is made, regardless of which metric is eventually chosen to report. Consolidating prompts and moving rules into configuration are both legitimate later steps, and picking a headline metric before establishing what it will be compared against risks reporting an improvement that cannot actually be substantiated."
+ },
+ {
+  "id": 50,
+  "domain": "D4",
+  "type": "multi",
+  "k": 2,
+  "scenario": "An assistant reviewing campaign drafts keeps writing for an engineering audience no matter the topic, cites a discontinued product line, runs long every time, and this week missed the point of the current campaign entirely. Which TWO reactions correctly turn into an instruction aimed at the right part of the setup? (Select TWO.)",
+  "options": [
+   {
+    "id": "A",
+    "text": "\"Wrong audience every time\" should become a standing instruction that applies to every future draft",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "\"Cites a discontinued product\" should be fixed by replacing the outdated file in the stored knowledge",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "\"Runs too long every time\" should be fixed by switching to a more capable model",
+    "why": "The lever is a length constraint, not model capability"
+   },
+   {
+    "id": "D",
+    "text": "\"Missed this week's campaign point\" should be written into the standing instructions so it is never missed again",
+    "why": "An evolving, one-off fact placed into a permanent slot"
+   }
+  ],
+  "correct": [
+   "A",
+   "B"
+  ],
+  "rationale": "The useful question for any recurring reaction is what would need to be true for the output to be right, and which part of the setup actually controls that. A wrong audience in every draft is controlled by a standing rule, and outdated citations are controlled by the stored knowledge source, so those are the correct homes. A model swap does not address a length constraint that belongs in the instructions, and this week's specific campaign goal is today's context, not a stable rule, so putting it into a permanent slot would make it wrong again next week."
+ },
+ {
+  "id": 51,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "An executive summary for a CFO reads: \"AI clears the disputes, cutting the backlog from ten days to two.\" The workflow actually still has a person reviewing every disputed case before it closes.",
+  "options": [
+   {
+    "id": "A",
+    "text": "The figure needs a published source before the CFO can trust the improvement claim",
+    "why": "Sourcing the number is not the actual problem here"
+   },
+   {
+    "id": "B",
+    "text": "The phrasing drops the human checkpoint entirely, so the CFO will now believe there is no review step at all",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "The summary is simply too brief for an executive audience and needs the underlying mechanism explained",
+    "why": "Length is not what caused the misunderstanding"
+   },
+   {
+    "id": "D",
+    "text": "There is no real problem, since executives generally want the outcome rather than the operational detail",
+    "why": "The instinct to hide the checkpoint is exactly backwards"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Phrasing like \"AI clears the disputes\" removes the human checkpoint from the sentence entirely, leaving the reader with the impression that no review exists, when one still does. The fix is stating what the tool does and then explicitly naming the human checkpoint, since stakeholders tend to trust a workflow more, not less, once its checkpoints are made explicit, which runs opposite to the instinct to leave them out for a cleaner-sounding summary."
+ },
+ {
+  "id": 52,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "A customer-onboarding workflow has run smoothly for four months. A proposed change would let the assistant approve compliance exceptions directly, a binding decision that is hard to reverse once made, on the basis that its case summaries have been consistently accurate.",
+  "options": [
+   {
+    "id": "A",
+    "text": "This is appropriate, since a consistent summarising record over four months is strong evidence the approval step is also safe",
+    "why": "Halo delegation from a different step"
+   },
+   {
+    "id": "B",
+    "text": "This gives the assistant more authority than the step's risk allows, because summary accuracy is evidence about the summaries, not about a binding, hard-to-reverse decision",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "This is appropriate only if a compliance analyst also signs off on the day's exceptions from the summary line, without needing to open each case",
+    "why": "Describes a gate that exists on paper but performs no real check"
+   },
+   {
+    "id": "D",
+    "text": "This is inappropriate only because four months is too short a track record to justify the change",
+    "why": "Length of track record is not the relevant factor"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Over-delegation often happens through reward: a step performing well becomes the justification for handing over a separate, higher-stakes step it has no bearing on. Summary accuracy says nothing about whether a binding compliance decision should also be automated, since that decision's reversibility and stakes are what should be assessed, not the unrelated track record. A sign-off that never actually opens the underlying case is not a functioning safeguard either, and no amount of additional track-record length changes the kind of decision this is."
+ },
+ {
+  "id": 53,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "A workflow's collaborative review step, where a compliance analyst is meant to check flagged cases, has quietly become the analyst skimming a one-line AI-generated summary and clicking approve, without opening the underlying case file.",
+  "options": [
+   {
+    "id": "A",
+    "text": "This step is functioning correctly, since a named person is still formally part of the process",
+    "why": "A name on paper without an actual check performed"
+   },
+   {
+    "id": "B",
+    "text": "This is an unstaffed gate: the step is automated in practice, since nothing about the underlying case is actually being verified anymore",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "This is a stale configuration problem, requiring the analyst's stored instructions to be refreshed",
+    "why": "The instructions are not the issue; the checking behaviour has decayed"
+   },
+   {
+    "id": "D",
+    "text": "This is acceptable as long as the summaries themselves remain accurate",
+    "why": "Accuracy of the summary does not restore an actual review"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "A collaborative step whose review has eroded down to a glance at a summary line, with nobody actually opening the case, is automated in practice even though a person's name still sits formally in the process; nothing was decided or agreed to make it so, but the map no longer reflects reality. This differs from a stale configuration issue, and the accuracy of the summary being checked does not change the fact that no real review is happening."
+ },
+ {
+  "id": 54,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "A team designs a new customer-feedback workflow entirely around a single flashy AI summarisation feature they recently discovered, rather than starting from what the feedback process actually needs to accomplish.",
+  "options": [
+   {
+    "id": "A",
+    "text": "This is a sound approach, since building around a capable feature usually produces the most efficient workflow",
+    "why": "Assumes the feature fits the need by default"
+   },
+   {
+    "id": "B",
+    "text": "This risks designing the workflow around the tool rather than around the actual work, producing a process shaped by what looks impressive rather than what is needed",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "This is fine as long as the feature is later swapped out if it underperforms",
+    "why": "Treats the design flaw as easily reversible after the fact"
+   },
+   {
+    "id": "D",
+    "text": "This concern applies only to expensive or experimental features, not to any feature already available in a standard plan",
+    "why": "The pricing tier of a feature does not change this risk"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Starting a workflow design from an appealing feature rather than from the actual requirements of the work risks shaping the process around what looks capable rather than what the task calls for, one of the recognised ways a delegation map goes wrong. Assuming the fit will simply work out, planning to swap the feature out later, or limiting the concern to costly features all understate how the underlying design choice, not the specific feature, is the problem."
+ },
+ {
+  "id": 55,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "A procurement lead wants to establish whether an assistant can be trusted to take over the monthly supplier scorecard process.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Give the assistant this month's new data, review the output carefully, and adopt it if the scores look reasonable",
+    "why": "No ground truth exists for new data"
+   },
+   {
+    "id": "B",
+    "text": "Ask the assistant to describe its intended approach and judge that description before running anything",
+    "why": "Judges a described method rather than an actual result"
+   },
+   {
+    "id": "C",
+    "text": "Run this month's new data through the assistant twice and adopt the result if both runs agree",
+    "why": "Agreement between two runs does not rule out a consistently wrong method"
+   },
+   {
+    "id": "D",
+    "text": "Give the assistant a past month whose correct scorecard is already known, holding back that known answer, and compare",
+    "why": null
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "rationale": "Testing against work that has already been finished and is already trusted gives a genuine point of comparison between reproduction and merely sounding plausible; holding back the known answer prevents it from shaping the assistant's output. Trusting new data with no ground truth, judging a described method rather than an actual result, or checking whether two runs agree with each other all fail to establish anything against a known-correct outcome."
+ },
+ {
+  "id": 56,
+  "domain": "D4",
+  "type": "single",
+  "k": 1,
+  "scenario": "A workflow map that assigns AI ownership of clause extraction and human ownership of final sign-off was designed eighteen months ago and has not been revisited since, despite the contract volume tripling and one new clause type being introduced.",
+  "options": [
+   {
+    "id": "A",
+    "text": "No review is needed as long as nobody has reported a specific failure",
+    "why": "Decay of review gates and standing rules is often silent"
+   },
+   {
+    "id": "B",
+    "text": "A scheduled review of the map is overdue, since review gates, standing instructions, and the map itself all tend to decay without any warning sign",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "The map should be rebuilt from scratch, since any map older than a year is presumed invalid",
+    "why": "Assumes an arbitrary age threshold rather than checking for actual drift"
+   },
+   {
+    "id": "D",
+    "text": "Only the sign-off step needs revisiting, since extraction is low-stakes and does not need periodic review",
+    "why": "Low-stakes steps can still drift out of date"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Review gates, standing instructions, and delegation maps all tend to go stale without producing any error message or obvious warning sign, which is why a scheduled review on a fixed cadence, checking whether steps changed, whether gates are still staffed, and whether volume or stakes shifted, is the appropriate control. Waiting for a reported failure, assuming an arbitrary expiry date, or exempting low-stakes steps from review all miss how quietly this kind of drift happens."
+ },
+ {
+  "id": 57,
+  "domain": "D5",
+  "type": "multi",
+  "k": 3,
+  "scenario": "A consultant is configuring an assistant for ongoing work with one client. Which THREE placements are correct? (Select THREE.)",
+  "options": [
+   {
+    "id": "A",
+    "text": "A firm-wide writing-tone rule that applies to every chat → account-level standing instructions",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "The client's recurring reference files and past deliverables → the client project's stored knowledge",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "\"This client's negotiation is paused until month-end\" → account-level standing instructions",
+    "why": "A temporary fact placed in a permanent slot"
+   },
+   {
+    "id": "D",
+    "text": "\"Treat any figure absent from the client's files as unconfirmed\" → the client project's own instructions",
+    "why": null
+   },
+   {
+    "id": "E",
+    "text": "A one-off question about a colleague's unrelated memo → a newly created project",
+    "why": "A one-off job belongs in a chat, not a new project"
+   },
+   {
+    "id": "F",
+    "text": "The consultant's general preference for short replies → the assistant's memory, mentioned once in passing",
+    "why": "A stable preference handed to a best-effort note"
+   }
+  ],
+  "correct": [
+   "A",
+   "B",
+   "D"
+  ],
+  "rationale": "The consistent rule is that stable rules belong in standing instructions, stable sources belong in stored knowledge, and one ongoing stream of work belongs in its own project, while today's one-off job belongs in the chat itself. A firm-wide rule true in every conversation is account-level; the client's standing files belong in that project's knowledge; and a rule governing how that client's work should be treated belongs in that project's own instructions. A temporary, evolving fact does not belong in a permanent instruction slot, a one-off unrelated question does not need its own project, and a stable personal preference deserves more than an incidental mention to a self-updating memory feature."
+ },
+ {
+  "id": 58,
+  "domain": "D5",
+  "type": "single",
+  "k": 1,
+  "scenario": "A team's assistant instruction says, \"Review contracts for risky clauses.\" Different reviewers using the same instruction on the same contract flag different clauses each time.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Add \"apply careful and consistent judgment\" to the instruction",
+    "why": "An exhortation, not a criterion"
+   },
+   {
+    "id": "B",
+    "text": "Rewrite the instruction naming specific clause types and a defined risk threshold to flag against",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Move to a more capable model, so the same ambiguous instruction resolves the same way each time",
+    "why": "Asks capability to substitute for an unwritten rule"
+   },
+   {
+    "id": "D",
+    "text": "Attach three previously flagged contracts as examples and let the pattern be inferred",
+    "why": "Leaves the actual criterion unnamed"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "The test for any configuration line is whether two different readers would act on it the same way; a vague instruction like flagging \"risky\" clauses fails that test in exactly the way this scenario shows, with no error message, just inconsistent output. Naming the specific clause types and a defined threshold passes that test, while a general exhortation, a hope that a stronger model resolves the ambiguity, or examples with no stated rule all leave the actual criterion unnamed."
+ },
+ {
+  "id": 59,
+  "domain": "D5",
+  "type": "single",
+  "k": 1,
+  "scenario": "A team connected a shared drive folder to an assistant with read-only access, to summarise incoming documents. A new workflow now needs the assistant to move processed documents into an archive folder.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Moving files is already possible, since a connector inherits everything the connecting account itself can do",
+    "why": "Confuses the ceiling with the scope actually granted"
+   },
+   {
+    "id": "B",
+    "text": "Adding a skill describing how to identify and archive processed documents is enough to enable moving files",
+    "why": "A skill teaches a method; it carries no permissions of its own"
+   },
+   {
+    "id": "C",
+    "text": "Moving files requires a second, separate connection, since read and write access cannot share one connector",
+    "why": "Invents a mechanical restriction that does not exist"
+   },
+   {
+    "id": "D",
+    "text": "Moving files is a write action that must be deliberately granted, once it is confirmed the connector supports it at all",
+    "why": null
+   }
+  ],
+  "correct": [
+   "D"
+  ],
+  "rationale": "Read-only access means looking without changing anything; moving, editing, or deleting are write actions granted only once the connection is trusted to behave correctly, and only once it is confirmed the connector was actually built to perform that action in the first place. Assuming a connector automatically inherits every capability the underlying account has, expecting a skill to carry permissions of its own, or inventing a rule about needing two separate connections all misunderstand how access is actually granted."
+ },
+ {
+  "id": 60,
+  "domain": "D5",
+  "type": "single",
+  "k": 1,
+  "scenario": "An associate needs to grant an assistant permission to edit, move, and delete files inside a connected drive for the first time.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Grant the access immediately, since the workflow clearly requires it",
+    "why": "Skips a check that matters before allowing destructive actions"
+   },
+   {
+    "id": "B",
+    "text": "Confirm how the connector handles version history and undo before allowing edit, move, or delete actions",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Grant access only after installing a community-published skill that claims to manage file safety",
+    "why": "A skill has no bearing on the connector's own recovery behaviour"
+   },
+   {
+    "id": "D",
+    "text": "Grant access, but only during a scheduled, unattended run rather than during an interactive session",
+    "why": "Timing of the run does not address recoverability at all"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Since deleted or moved files often do not land anywhere recoverable, confirming how a connector handles version history and undo before granting write access is the specific safeguard that matters here, regardless of how clearly the workflow seems to need it. A community skill has no control over the connector's own recovery behaviour, and whether the run happens live or on a schedule has no bearing on whether a mistaken deletion can be reversed."
+ },
+ {
+  "id": 61,
+  "domain": "D5",
+  "type": "single",
+  "k": 1,
+  "scenario": "A team keeps re-explaining the same five ordered steps every time they need a particular weekly report generated, in the exact sequence those steps must run.",
+  "options": [
+   {
+    "id": "A",
+    "text": "This belongs in a standing instruction, since standing instructions apply automatically to every output",
+    "why": "A one-line rule cannot preserve an ordered sequence of steps"
+   },
+   {
+    "id": "B",
+    "text": "This belongs in the assistant's memory, since memory improves with repeated use over time",
+    "why": "Memory is a best-effort note, not a reliable procedure store"
+   },
+   {
+    "id": "C",
+    "text": "This belongs in a packaged skill, since it is an ordered procedure rather than a standing rule or a reference fact",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "This belongs in the project's stored knowledge, since it describes a repeatable process",
+    "why": "Stored knowledge holds reference material, not step-by-step procedure"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "There are three natural homes for recurring context: standing instructions for always-true rules, stored knowledge for stable reference material, and packaged skills for ordered, repeatable procedures. An ordered sequence of steps is a procedure, and putting it into a one-line standing instruction would lose the required order, while memory and stored knowledge are built for different kinds of persistence entirely."
+ },
+ {
+  "id": 62,
+  "domain": "D5",
+  "type": "single",
+  "k": 1,
+  "scenario": "A pricing project's assistant produces a quote with unit prices, to the cent, that nobody currently recognises. The associate assumes the numbers were invented.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Re-send the request with firmer wording insisting on current prices only",
+    "why": "Tells the model to disregard a file it was configured to use"
+   },
+   {
+    "id": "B",
+    "text": "Check the project's stored files for a superseded rate card, replace it if found, and set a recurring review date",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Switch the project to a more capable model, on the assumption it fabricates figures less often",
+    "why": "Changes the model reading a stale file faithfully"
+   },
+   {
+    "id": "D",
+    "text": "Ask the assistant to rate its confidence in each price and keep only the highest-confidence figures",
+    "why": "A confident answer built on a stale file is still confident"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Stored project files that have gone out of date produce exactly this symptom: a confident, precise-looking answer with no warning attached, because the assistant has no way of knowing the file it was given is superseded. What looks like fabrication is often a configuration problem, so checking and replacing the stale file, then reviewing stored context on a schedule, addresses the actual cause, unlike firmer wording, a model change, or a self-reported confidence score."
+ },
+ {
+  "id": 63,
+  "domain": "D5",
+  "type": "single",
+  "k": 1,
+  "scenario": "To \"save context,\" an associate summarises a 70-page agreement into one page before asking for a risk analysis, which then misses two clauses never included in the summary.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Upload the full agreement instead, since analysis quality depends on what is actually placed in front of the model",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "Write a more thorough one-page summary that specifically covers the indemnity clauses",
+    "why": "Still leaves the associate as a fallible filter"
+   },
+   {
+    "id": "C",
+    "text": "Ask the assistant which sections it would need and paste only those in",
+    "why": "Asks for sections from a document it has not been shown"
+   },
+   {
+    "id": "D",
+    "text": "Switch to a more capable model to reason more carefully about the existing summary",
+    "why": "Reasons harder about text that still lacks the clauses"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "A full document, once uploaded, genuinely sits in front of the model in a way a summary does not, and analysis quality on something like a risk review improves accordingly when the full document matters. A better summary keeps the same fallible filtering step in place, asking for needed sections from an unseen document is not something the model can do, and a stronger model cannot analyse clauses it was never given."
+ },
+ {
+  "id": 64,
+  "domain": "D5",
+  "type": "single",
+  "k": 1,
+  "scenario": "An associate applies a careful security-style review before every use of a built-in spreadsheet tool on internal data, but enabled a community-published add-on, granting it write access to a shared drive, after only a brief glance at its description.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Apply the same careful review to both uses, for consistency",
+    "why": "Over-verifies the low-risk built-in tool without fixing the real gap"
+   },
+   {
+    "id": "B",
+    "text": "Disable the community add-on until it has actually been reviewed, and reduce its drive connection back to read-only in the meantime",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Leave both habits as they are, since the community add-on has not caused a problem so far",
+    "why": "Leaves a higher-risk gap open on the basis of no evidence yet"
+   },
+   {
+    "id": "D",
+    "text": "Stop using any third-party add-ons entirely until a fully approved list is published",
+    "why": "Abandons the capability rather than governing it properly"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Caution should scale with capability and access: the built-in, low-risk tool does not need the same scrutiny as a community-published add-on that was granted write access after only a cursory look. The correct fix targets the actual gap directly, reviewing the add-on before re-enabling it and reducing its access back to read-only, rather than applying uniform maximum caution everywhere, ignoring the gap because nothing has failed yet, or abandoning the capability altogether."
+ },
+ {
+  "id": 65,
+  "domain": "D5",
+  "type": "single",
+  "k": 1,
+  "scenario": "Two hours into a long conversation about a supplier audit, the assistant stops including page references it was told to use at the start, restates a supplier score that contradicts one given earlier, and drifts toward generic audit advice.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Keep restating the page-number rule and the correct score at every turn within the same long conversation",
+    "why": "Repeatedly patches a window that has become overloaded"
+   },
+   {
+    "id": "B",
+    "text": "Start a brand-new conversation from scratch, discarding everything discussed so far",
+    "why": "Throws away two hours of decisions along with the drift"
+   },
+   {
+    "id": "C",
+    "text": "Ask for a summary of decisions made, open questions, and every rule given; correct it; then continue in a fresh conversation with the files reattached",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Move the entire conversation into a persistent project, expecting the drift to resolve itself",
+    "why": "Misunderstands what a project actually does"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "Forgetting an earlier rule, contradicting a prior figure, and drifting into generic advice are recognised signs that a conversation has become overloaded; the appropriate response is neither to keep patching it nor to abandon it outright, but to request a summary of what was decided and still open, correct anything wrong in that summary, and carry it into a fresh conversation with the source files reattached. Projects hold standing files and instructions; they do not resolve an already-overloaded conversation."
+ },
+ {
+  "id": 66,
+  "domain": "D7",
+  "type": "single",
+  "k": 1,
+  "scenario": "In a brand-new conversation, an associate asks for a tariff-change notice to be drafted. The very first reply omits a required legal footer and states the wrong currency. This is the first notice of its kind ever drafted with this assistant.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Switch immediately to a more capable model, assuming it would not have made these mistakes",
+    "why": "Jumps to the most expensive fix untested"
+   },
+   {
+    "id": "B",
+    "text": "Start another brand-new conversation and resend the identical request",
+    "why": "Resends the same gaps into an equally empty conversation"
+   },
+   {
+    "id": "C",
+    "text": "Treat this as an under-specified request: re-read it against its actual parts and add what was left out",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "Check whether a stored instruction or reference file has become outdated since the last similar notice",
+    "why": "The signature of stale configuration is \"it used to work,\" not \"wrong from the start\""
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "When something is wrong from the very first response in a brand-new conversation, that timing points to under-specification rather than to conversation overload or outdated configuration, since neither of those causes could apply to a first reply with no history behind it. The appropriate first move is re-reading the request against its actual components, such as role, context, constraints, and format, and adding whatever was genuinely missing, rather than jumping straight to a different model or repeating the same gaps in another fresh conversation."
+ },
+ {
+  "id": 67,
+  "domain": "D7",
+  "type": "single",
+  "k": 1,
+  "scenario": "An assistant-written script for preparing a monthly supplier payment run has passed a test against a past month with a known-correct result. A colleague suggests letting the script also release the payments automatically each month, without further human involvement.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Let the script prepare the run and have a named person release it, since a released payment cannot be recalled",
+    "why": null
+   },
+   {
+    "id": "B",
+    "text": "Let the script release automatically, since it has already passed a known-answer test",
+    "why": "A passed test on preparation says nothing about an irreversible release"
+   },
+   {
+    "id": "C",
+    "text": "Have the script also generate a confirmation report and treat a clean report as sufficient approval to release",
+    "why": "The report is generated from the same brief as the run, so it cannot catch what the brief left out"
+   },
+   {
+    "id": "D",
+    "text": "Stop using the script even for preparation, since payment runs are too high-stakes for any automation",
+    "why": "Abandons a lower-risk step the script is well suited for"
+   }
+  ],
+  "correct": [
+   "A"
+  ],
+  "rationale": "A high-stakes action with no way to undo it, such as an actually released payment, sits past the point where preparation alone earns trust; passing a known-answer test validates the preparation step, not the irreversible act of sending the payments. Letting a script certify its own output through a report built from the same brief provides no independent check, and refusing to use the script at all abandons a step it is genuinely well suited for."
+ },
+ {
+  "id": 68,
+  "domain": "D7",
+  "type": "single",
+  "k": 1,
+  "scenario": "A finance team's monthly reporting workflow, stable for over a year, has started producing subtly wrong summaries in the past two weeks, following an unannounced change to an internal data export format that nobody flagged to the team.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Treat this as under-specification and re-read the original prompt for missing detail",
+    "why": "The prompt has not changed; the underlying data source has"
+   },
+   {
+    "id": "B",
+    "text": "Treat this as stale configuration: something the workflow relies on has changed underneath it, matching the signature of \"it used to work, now it doesn't\"",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Treat this as context overload from an unusually long recent conversation",
+    "why": "A stable workflow running fine for over a year does not fit an overload pattern"
+   },
+   {
+    "id": "D",
+    "text": "Treat this as an inherent limitation of the task and remove AI involvement from the workflow entirely",
+    "why": "Abandons a fix for a specific, identifiable cause"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "A workflow that worked reliably for a long stretch and then broke coincides exactly with the timing signature of stale configuration, where something the process depends on, here an upstream data format, has quietly changed underneath it. Re-reading a prompt that has not itself changed misdiagnoses the cause, an overload explanation does not fit a process that had been stable for over a year, and abandoning the workflow entirely skips a fix that is very findable once the timing is read correctly."
+ },
+ {
+  "id": 69,
+  "domain": "D7",
+  "type": "single",
+  "k": 1,
+  "scenario": "An associate is troubleshooting a disappointing output and is deciding what to check first, in order of cost: re-reading the original request for missing detail, checking whether the conversation has grown very long, checking whether the right feature or model tier was used, checking whether stored configuration is current, or concluding the task itself is simply not suited to the assistant.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Concluding the task is unsuited to the assistant should be checked first, to rule out wasted effort on an impossible request",
+    "why": "Reached first, this is an excuse; reached last, it is a conclusion"
+   },
+   {
+    "id": "B",
+    "text": "Checking the model or feature used should come before re-reading the request itself",
+    "why": "Skips the cheapest check before a more expensive one"
+   },
+   {
+    "id": "C",
+    "text": "Re-reading the request against its own components should be the very first step, since it is the cheapest and catches the most common cause",
+    "why": null
+   },
+   {
+    "id": "D",
+    "text": "All five checks are equally likely to be the cause, so the order in which they are checked does not matter",
+    "why": "Timing and cost both suggest a meaningful order"
+   }
+  ],
+  "correct": [
+   "C"
+  ],
+  "rationale": "The diagnostic sequence runs cheapest first: re-reading the request against its own parts catches the most frequent cause of a disappointing output before anything more expensive is tried. Jumping straight to a model or feature change, or straight to declaring the task impossible, skips past cheaper explanations that are both more common and faster to rule out, and treating a task as unsuited to the assistant is only a reasonable conclusion once everything cheaper has actually been checked."
+ },
+ {
+  "id": 70,
+  "domain": "D7",
+  "type": "single",
+  "k": 1,
+  "scenario": "A team notices that a workflow behaves inconsistently: the same request sometimes produces a clean result and sometimes a flawed one, with no obvious change in wording, data, or configuration between attempts.",
+  "options": [
+   {
+    "id": "A",
+    "text": "This must indicate the underlying configuration has quietly gone stale",
+    "why": "Stale configuration shows as \"used to work, now doesn't,\" not intermittent variation"
+   },
+   {
+    "id": "B",
+    "text": "This is most likely ordinary output variability rather than a fixable configuration or specification fault, and is worth distinguishing from a genuine, repeatable cause before making any change",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "This always means the request itself is under-specified and needs to be rewritten immediately",
+    "why": "Under-specification produces a consistent wrong pattern, not unpredictable variation"
+   },
+   {
+    "id": "D",
+    "text": "This should be treated the same as a repeatable, single error type and fixed by switching model tier immediately",
+    "why": "A model swap addresses a repeatable pattern, not unexplained variation"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Before reaching for a fix aimed at a specific, repeatable cause, it is worth distinguishing ordinary run-to-run variability from an actual configuration or specification fault, since the diagnostic categories for under-specification, stale configuration, and wrong feature or model all describe a consistent, repeatable symptom rather than unexplained inconsistency between otherwise identical attempts. Assuming any one specific cause without that distinction risks making a change that does not address anything real."
+ },
+ {
+  "id": 71,
+  "domain": "D7",
+  "type": "single",
+  "k": 1,
+  "scenario": "An associate applies a full security-style review before every use of a low-risk, built-in company tool on ordinary internal data, treating it with the same scrutiny as a newly granted, high-access external connector.",
+  "options": [
+   {
+    "id": "A",
+    "text": "This is the correct habit, since applying maximum caution everywhere is always the safest approach",
+    "why": "Uniform maximum scrutiny is the habit most likely to be abandoned within weeks"
+   },
+   {
+    "id": "B",
+    "text": "Review depth should scale with capability and access, so the built-in low-risk tool warrants lighter scrutiny than a newly granted high-access connector",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "The built-in tool should receive no review at all, since it is provided by the platform itself",
+    "why": "Provider trust does not eliminate the need for any oversight"
+   },
+   {
+    "id": "D",
+    "text": "Review depth should be based on how frequently a tool is used, not on what access it has been granted",
+    "why": "Frequency of use is unrelated to what a tool is actually capable of doing"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "Caution is meant to rise as capability and access rise; applying the same heavy review to a safe, everyday built-in tool as to a newly granted, high-access external connector over-verifies the low-risk case, which tends to make the habit unsustainable and likely to be dropped altogether. Removing review from the built-in tool entirely, or basing scrutiny on frequency of use rather than on what access has actually been granted, both misplace where the real risk sits."
+ },
+ {
+  "id": 72,
+  "domain": "D7",
+  "type": "single",
+  "k": 1,
+  "scenario": "A support workflow's automated routing has performed reliably for months. This week, a policy update changed which category certain tickets should fall into, but nobody updated the routing rules the workflow relies on, and misrouted tickets have started appearing.",
+  "options": [
+   {
+    "id": "A",
+    "text": "Diagnose this as under-specification in the original routing request",
+    "why": "The original request has not changed; the policy it depends on has"
+   },
+   {
+    "id": "B",
+    "text": "Diagnose this as stale configuration, since something the workflow depends on changed without the workflow being updated to match, fitting the pattern of \"it used to work, now it doesn't\"",
+    "why": null
+   },
+   {
+    "id": "C",
+    "text": "Diagnose this as context overload from a long-running conversation history",
+    "why": "Routing behaviour like this is not conversation-length dependent"
+   },
+   {
+    "id": "D",
+    "text": "Treat this as proof the task was never suited to automated routing in the first place",
+    "why": "Skips a specific, identifiable, and fixable cause"
+   }
+  ],
+  "correct": [
+   "B"
+  ],
+  "rationale": "A workflow that had been reliable and then broke, specifically after an external change it depends on shifted without the workflow itself being updated, matches the stale-configuration pattern precisely: nothing about the original request changed, only what it relies on did. This differs from under-specification, has no relationship to conversation length, and concluding the task was never suited to automation skips past a clearly findable and fixable cause."
+ }
+];
+
+</script>
+<script>
+(function(){
+  document.getElementById('examTitle').textContent = EXAM_TITLE;
+  document.getElementById('examSub').textContent = QUESTIONS.length + " questions · scenario-based · immediate feedback";
+
+  const DOMAIN_NAMES = {
+    D1:"Prompting & Task Execution", D2:"Output Evaluation & Validation",
+    D3:"Product & Model Selection", D4:"Workflow Integration & Solution Design",
+    D5:"Configuration & Knowledge Management", D6:"Governance, Risk & Responsible Use",
+    D7:"Troubleshooting & Optimization"
+  };
+
+  let idx = 0;
+  let checked = false;
+  let results = QUESTIONS.map(()=>null); // null = unanswered, true/false after check
+  let selectedIds = [];
+  let timeLeft = TIME_LIMIT_MIN*60;
+  let timerHandle = null;
+  let finished = false;
+
+  const el = id => document.getElementById(id);
+
+  function startTimer(){
+    timerHandle = setInterval(()=>{
+      timeLeft--;
+      if(timeLeft<=0){ timeLeft=0; clearInterval(timerHandle); finishExam(); }
+      renderTimer();
+    },1000);
+  }
+  function renderTimer(){
+    const m = Math.floor(timeLeft/60), s = timeLeft%60;
+    const t = el('timer');
+    t.textContent = String(m).padStart(2,'0')+":"+String(s).padStart(2,'0');
+    t.classList.toggle('low', timeLeft <= 300);
+  }
+
+  function instrLabel(q){
+    if(q.type==='single') return 'Select one answer';
+    if(q.k===2) return 'Select exactly TWO answers';
+    if(q.k===3) return 'Select exactly THREE answers';
+    return 'Select '+q.k+' answers';
+  }
+
+  function renderRunningScore(){
+    const answered = results.filter(r=>r!==null).length;
+    const right = results.filter(r=>r===true).length;
+    el('scoreRunning').textContent = 'Score: '+right+' / '+answered;
+  }
+
+  function renderQuestion(){
+    checked = false;
+    selectedIds = [];
+    const q = QUESTIONS[idx];
+    el('domainBadge').textContent = q.domain+' · '+DOMAIN_NAMES[q.domain];
+    el('instrBadge').textContent = instrLabel(q);
+    el('scenarioText').textContent = q.scenario;
+    el('progressText').textContent = 'Question '+(idx+1)+' of '+QUESTIONS.length;
+    el('progressFill').style.width = ((idx)/QUESTIONS.length*100)+'%';
+    renderRunningScore();
+
+    const list = el('optionsList');
+    list.innerHTML = '';
+    q.options.forEach(opt=>{
+      const row = document.createElement('label');
+      row.className='option';
+      row.dataset.id = opt.id;
+      const input = document.createElement('input');
+      input.type = q.type==='single' ? 'radio' : 'checkbox';
+      input.name = 'opt';
+      input.value = opt.id;
+      input.addEventListener('change', onOptionChange);
+      const textWrap = document.createElement('div');
+      textWrap.style.flex='1';
+      const txt = document.createElement('div');
+      txt.className='opt-text';
+      txt.innerHTML = '<strong>'+opt.id+'.</strong> '+opt.text;
+      const why = document.createElement('div');
+      why.className='opt-why';
+      why.textContent = opt.why ? opt.why : 'This is a correct choice.';
+      textWrap.appendChild(txt);
+      textWrap.appendChild(why);
+      row.appendChild(input);
+      row.appendChild(textWrap);
+      list.appendChild(row);
+    });
+
+    el('feedbackBanner').style.display='none';
+    el('feedbackBanner').className='feedback-banner';
+    el('checkBtn').disabled = false;
+    el('nextBtn').disabled = true;
+    el('nextBtn').textContent = (idx===QUESTIONS.length-1) ? 'Finish Exam →' : 'Next Question →';
+    el('hintText').textContent = 'Choose an answer, then check it.';
+  }
+
+  function onOptionChange(){
+    const q = QUESTIONS[idx];
+    if(checked) return;
+    if(q.type==='multi'){
+      const boxes = Array.from(document.querySelectorAll('#optionsList input[type=checkbox]'));
+      const checkedBoxes = boxes.filter(b=>b.checked);
+      if(checkedBoxes.length > q.k){
+        this.checked = false; // enforce exact count softly
+      }
+    }
+  }
+
+  function onCheck(){
+    const q = QUESTIONS[idx];
+    const inputs = Array.from(document.querySelectorAll('#optionsList input'));
+    selectedIds = inputs.filter(i=>i.checked).map(i=>i.value);
+    const neededCount = q.type==='single' ? 1 : q.k;
+    if(selectedIds.length !== neededCount){
+      el('hintText').textContent = q.type==='single'
+        ? 'Please select one answer before checking.'
+        : 'Please select exactly '+neededCount+' answers before checking.';
+      return;
+    }
+    checked = true;
+    const correctSet = new Set(q.correct);
+    const selSet = new Set(selectedIds);
+    const isCorrect = correctSet.size===selSet.size && [...correctSet].every(c=>selSet.has(c));
+    results[idx] = isCorrect;
+
+    document.querySelectorAll('#optionsList .option').forEach(row=>{
+      const id = row.dataset.id;
+      row.classList.add('locked');
+      const input = row.querySelector('input');
+      input.disabled = true;
+      const isRight = correctSet.has(id);
+      const wasPicked = selSet.has(id);
+      if(isRight){
+        row.classList.add('reveal-correct');
+        const tag = document.createElement('span');
+        tag.className='opt-tag ok'; tag.textContent='CORRECT';
+        row.appendChild(tag);
+      } else if(wasPicked && !isRight){
+        row.classList.add('reveal-wrong');
+        const tag = document.createElement('span');
+        tag.className='opt-tag bad'; tag.textContent='WRONG';
+        row.appendChild(tag);
+      }
+    });
+
+    const banner = el('feedbackBanner');
+    banner.style.display='block';
+    banner.innerHTML = '';
+    const verdictLine = document.createElement('div');
+    verdictLine.style.display='flex';
+    verdictLine.style.alignItems='center';
+    verdictLine.style.gap='8px';
+    if(isCorrect){
+      banner.className='feedback-banner correct';
+      verdictLine.textContent = '✓ Correct — well reasoned.';
+    } else {
+      banner.className='feedback-banner wrong';
+      const correctList = q.correct.join(', ');
+      verdictLine.textContent = '✗ Not quite — correct answer'+(q.correct.length>1?'s':'')+': '+correctList+'.';
+    }
+    banner.appendChild(verdictLine);
+    if(q.rationale){
+      const rat = document.createElement('div');
+      rat.style.fontWeight='400';
+      rat.style.fontSize='13.5px';
+      rat.style.marginTop='8px';
+      rat.style.lineHeight='1.5';
+      rat.style.opacity='0.9';
+      rat.textContent = q.rationale;
+      banner.appendChild(rat);
+    }
+
+    el('checkBtn').disabled = true;
+    el('nextBtn').disabled = false;
+    el('hintText').textContent = 'Review the highlighted reasoning, then continue.';
+    renderRunningScore();
+  }
+
+  function onNext(){
+    if(idx < QUESTIONS.length-1){
+      idx++;
+      renderQuestion();
+    } else {
+      finishExam();
+    }
+  }
+
+  function finishExam(){
+    if(finished) return;
+    finished = true;
+    clearInterval(timerHandle);
+    el('quizScreen').style.display='none';
+    el('resultsScreen').style.display='block';
+    el('progressFill').style.width='100%';
+    el('progressText').textContent = 'Exam complete';
+
+    const answeredResults = results.map(r=>r===true);
+    const totalRight = answeredResults.filter(Boolean).length;
+    const perQPoints = PASS_SCORE / QUESTIONS.length;
+    const scoreTotal = Math.round(totalRight * perQPoints);
+    el('scoreBig').textContent = scoreTotal + ' / ' + PASS_SCORE;
+
+    const passed = scoreTotal >= PASS_THRESHOLD;
+    const pill = el('passPill');
+    pill.textContent = passed ? 'PASS  (cutoff '+PASS_THRESHOLD+')' : 'DID NOT PASS  (cutoff '+PASS_THRESHOLD+')';
+    pill.className = 'pass-pill '+(passed?'pass':'fail');
+
+    const domains = {};
+    QUESTIONS.forEach((q,i)=>{
+      if(!domains[q.domain]) domains[q.domain] = {right:0,total:0};
+      domains[q.domain].total++;
+      if(results[i]===true) domains[q.domain].right++;
+    });
+    const tbody = el('domainTableBody');
+    tbody.innerHTML = '';
+    Object.keys(domains).sort().forEach(d=>{
+      const stat = domains[d];
+      const pct = Math.round(stat.right/stat.total*100);
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>'+d+' — '+DOMAIN_NAMES[d]+'</td>'+
+        '<td>'+stat.right+' / '+stat.total+'</td>'+
+        '<td class="bar-cell"><div class="mini-bar-shell"><div class="mini-bar-fill" style="width:'+pct+'%"></div></div></td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function restart(){
+    idx=0; checked=false; results = QUESTIONS.map(()=>null); selectedIds=[];
+    timeLeft = TIME_LIMIT_MIN*60; finished=false;
+    el('resultsScreen').style.display='none';
+    el('quizScreen').style.display='block';
+    renderQuestion();
+    renderTimer();
+    clearInterval(timerHandle);
+    startTimer();
+  }
+
+  el('checkBtn').addEventListener('click', onCheck);
+  el('nextBtn').addEventListener('click', onNext);
+  el('restartBtn').addEventListener('click', restart);
+
+  renderQuestion();
+  renderTimer();
+  startTimer();
+})();
+</script>
+</body>
+</html>
